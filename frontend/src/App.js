@@ -6,7 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar";
 import LandingPage from "./components/pages/landingPage";
 import MbtaAlertsPage from "./components/pages/mbtaAlerts";
-import trainTrackerPage from "./components/pages/trainTrackerPage";
+import Facilities from "./components/pages/facilities";
 import HomePage from "./components/pages/homePage";
 import Login from "./components/pages/loginPage";
 import Signup from "./components/pages/registerPage";
@@ -35,6 +35,7 @@ const App = () => {
           <Route exact path="/signup" element={<Signup />} />
           <Route path="/privateUserProfile" element={<PrivateUserProfile />} />
           <Route exact path="/mbtaAlerts" element={<MbtaAlertsPage />} />
+          <Route path="/facilities" element={<Facilities />} />
           <Route exact path="/trainTrackerPage" element={<trainTrackerPage />} />
         </Routes>
       </UserContext.Provider>
