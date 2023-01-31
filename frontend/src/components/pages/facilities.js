@@ -17,10 +17,12 @@ function Facilities() {
 
   return (
     <div>
-        <h1>Facilities</h1>
+        <h1>List Of Facilities</h1>
       {facilities.map(facility => (
         <Card
         body
+        bg = 'dark'
+        text = "white"
         outline
         color="success"
         className="mx-1 my-2"
