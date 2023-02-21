@@ -20,6 +20,8 @@ function Alerts() {
       {alerts.map(alert => (
         <Card
         body
+        bg = "danger"
+        text = "warning"
         outline
         color="success"
         className="mx-1 my-2"
