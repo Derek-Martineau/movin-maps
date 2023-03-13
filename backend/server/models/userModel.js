@@ -22,6 +22,16 @@ const newUserSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    favRoute: {
+      required: false,
+      type: String,
+      lable: "favorite routes"
+    },
+    location: {
+      required: false,
+      type: String,
+      lable: "previous location"
+    }
   },
   { collection: "users" }
 );
