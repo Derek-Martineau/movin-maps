@@ -17,14 +17,14 @@ function Facilities() {
 
   return (
     <div>
-        <h1>List Of Facilities</h1>
+        <h1 style = {{color: 'white'}}>List Of Facilities</h1>
       {facilities.map(facility => (
         <Card
         body
-        bg = 'dark'
-        text = "white"
+        bg = "white"
+        text = "black"
         outline
-        color="success"
+        color="black"
         className="mx-1 my-2"
         style={{ width: "30rem" }}
       >

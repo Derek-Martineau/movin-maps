@@ -17,7 +17,7 @@ function Alerts() {
 
   return (
     <div>
-       <h1>Recent Alerts!</h1>
+       <h1 style = {{color: 'white'}}>Recent Alerts</h1>
       {alerts.map(alert => (
         <Card
         body
