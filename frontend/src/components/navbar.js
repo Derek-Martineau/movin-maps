@@ -20,7 +20,7 @@ export default function Navbar() {
   // we have an issue with getUserInfo() returning null after a few minutes
   // it seems.
   return (
-    <ReactNavbar bg="dark" variant="dark">
+    <ReactNavbar bg="dark" variant="dark" text = "white">
     <Container>
       <Nav className="me-auto">
         <Nav.Link href="/">Start</Nav.Link>
