@@ -90,7 +90,7 @@ const Login = () => {
                     placeholder="Enter username"
                   />
                   <Form.Text className="text-muted">
-                    We just might sell your data
+                    Please Enter Your Username
                   </Form.Text>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -104,7 +104,7 @@ const Login = () => {
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
                   <Form.Text className="text-muted pt-1">
-                    Dont have an account?
+                    Don't have an account?
                     <span>
                       <Link to="/signup" style={labelStyling}> Sign up
                       </Link>

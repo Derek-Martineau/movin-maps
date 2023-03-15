@@ -17,14 +17,11 @@ function Alerts() {
 
   return (
     <div>
-       <h1>Recent Alerts!</h1>
       {alerts.map(alert => (
         <Card
         body
-        bg = "white"
-        text = "black"
         outline
-        color="black"
+        color="success"
         className="mx-1 my-2"
         style={{ width: "30rem" }}
       >

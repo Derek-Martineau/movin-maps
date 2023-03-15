@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import getUserInfo from '../../utilities/decodeJwt'
+
+document.body.style = 'background: purple;';
 const HomePage = () => {
     const [user, setUser] = useState({})
     const navigate = useNavigate()
