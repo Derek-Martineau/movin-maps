@@ -25,13 +25,8 @@ const newUserSchema = new mongoose.Schema(
     favRoute: {
       required: false,
       type: String,
-      lable: "favorite routes"
+      label: "favorite routes"
     },
-    location: {
-      required: false,
-      type: String,
-      lable: "previous location"
-    }
   },
   { collection: "users" }
 );
