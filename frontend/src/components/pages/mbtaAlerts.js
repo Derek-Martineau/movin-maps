@@ -17,7 +17,7 @@ function Alerts() {
 
   return (
     <div>
-       <h1 style = {{color: 'white'}}>Recent Alerts</h1>
+       <h1 className="text-center" style = {{color: 'white'}}>Recent Alerts</h1>
       {alerts.map(alert => (
         <Card
         body
@@ -26,7 +26,7 @@ function Alerts() {
         outline
         color="black"
         className="mx-1 my-2"
-        style={{ width: "30rem" }}
+        style={{ center: "30rem" }}
       >
         <Card.Body>
         <Card.Title>Alert</Card.Title>
