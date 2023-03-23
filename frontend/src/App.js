@@ -5,11 +5,12 @@ import { Route, Routes } from "react-router-dom";
 // We import all the components we need in our app
 import Navbar from "./components/navbar";
 import LandingPage from "./components/pages/landingPage";
-import MbtaAlertsPage from "./components/pages/mbtaAlerts";
+import MbtaAlertsPage from "./components/pages/alerts";
 import Facilities from "./components/pages/facilities";
 import HomePage from "./components/pages/homePage";
 import Login from "./components/pages/loginPage";
 import Signup from "./components/pages/registerPage";
+import LiveMap from "./components/pages/liveMap";
 import PrivateUserProfile from "./components/pages/privateUserProfilePage";
 import { createContext, useState, useEffect } from "react";
 import getUserInfo from "./utilities/decodeJwt";
@@ -34,9 +35,9 @@ const App = () => {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/signup" element={<Signup />} />
           <Route path="/privateUserProfile" element={<PrivateUserProfile />} />
-          <Route exact path="/mbtaAlerts" element={<MbtaAlertsPage />} />
+          <Route exact path="/alerts" element={<MbtaAlertsPage />} />
           <Route path="/facilities" element={<Facilities />} />
-          <Route exact path="/trainTrackerPage" element={<trainTrackerPage />} />
+          <Route path="/liveMap" element={<LiveMap />} />
         </Routes>
       </UserContext.Provider>
     </>

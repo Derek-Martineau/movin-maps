@@ -26,7 +26,7 @@ function Alerts() {
         outline
         color="black"
         className="mx-1 my-2"
-        style={{ center: "30rem" }}
+        style={{ center: "auto" }}
       >
         <Card.Body>
         <Card.Title>Alert</Card.Title>
