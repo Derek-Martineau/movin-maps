@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+// We use Route in order to define the different routes of our application
+import { Route, Routes } from "react-router-dom";
 
-function App() {
+// We import all the components we need in our app
+import Navbar from "./components/navbar";
+import LandingPage from "./components/pages/landingPage";
+import MbtaAlertsPage from "./components/pages/mbtaAlerts";
+import Facilities from "./components/pages/facilities";
+import HomePage from "./components/pages/homePage";
+import Login from "./components/pages/loginPage";
+import Signup from "./components/pages/registerPage";
+import PrivateUserProfile from "./components/pages/privateUserProfilePage";
+import { createContext, useState, useEffect } from "react";
+import getUserInfo from "./utilities/decodeJwt";
+
+export const UserContext = createContext();
+//test change
+//test again
+const App = () => {
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    setUser(getUserInfo());
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      <UserContext.Provider value={user}>
+        <Routes>
+          <Route exact path="/" element={<LandingPage />} />
+          <Route exact path="/home" element={<HomePage />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/signup" element={<Signup />} />
+          <Route path="/privateUserProfile" element={<PrivateUserProfile />} />
+          <Route exact path="/mbtaAlerts" element={<MbtaAlertsPage />} />
+          <Route path="/facilities" element={<Facilities />} />
+          <Route exact path="/trainTrackerPage" element={<trainTrackerPage />} />
+        </Routes>
+      </UserContext.Provider>
+    </>
   );
-}
+};
 
-export default App;
+
+
+export default App
