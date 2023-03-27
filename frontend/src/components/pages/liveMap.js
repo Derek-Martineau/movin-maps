@@ -1,46 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import Card from 'react-bootstrap/Card';
-import axios from 'axios';
+import React from 'react';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import TileLayer from 'ol/layer/Tile';
+import OSM from 'ol/source/OSM';
+import 'ol/ol.css'
+import VectorLayer from 'ol/layer/Vector';
+import Style from 'ol/style/Style'
+import Icon from 'ol/style/Icon'
 
-function Alerts() {
-  const [alerts, setAlerts] = useState([]);
+/* Init is the map function 
+Map variable has view,center,zoom,minZoom,MaxZoom 
+view provides a 2d view of the map 
+center focuses where the user is looking at
+zoom is the magnification of the map
+TileLayter are prerendered grid tile images 
+that view displays to the user
 
-  useEffect(() => {
-    async function fetchData() {
-      const result = await axios(
-        'https://api-v3.mbta.com/alerts?sort=banner&filter%5Bactivity%5D=BOARD%2CEXIT%2CRIDE',
-      );
-      setAlerts(result.data.data);
-    }
-    fetchData();
-  }, []);
+*/
+function Maplayer(){
+  const map = new Map({
+    view: new View({
+      center: [-7910361.335273651, 5215196.272155075],
+      zoom: 15,
+      maxZoom: 20,
+      minZoom: 10
+    }),
+    layers: [
+      new TileLayer({
+        source: new OSM()
 
+      })
+    ],
+    target: 'map'
+  });
+
+  
+  
+ //display the map on the webpage
   return (
-    <div>
-      {alerts.map(alert => (
-        <Card
-        body
-        outline
-        color="success"
-        className="mx-1 my-2"
-        style={{ width: "30rem" }}
-      >
-        <Card.Body>
-        <Card.Title>Alert</Card.Title>
-        <Card.Text>{alert.attributes.header}{alert.attributes.description}</Card.Text>
-        </Card.Body>
-      </Card>
-      ))}
-
-        <h1>Alerts!</h1>
-      {alerts.map(alert => (
-        <div key={alert.id}>
-          <h3>{alert.attributes.header}</h3>
-          <p>{alert.attributes.description}</p>
-        </div>
-      ))}
-    </div>
-  );
+    <div style={{height:'1080px', width:'1920px'}}id='map' class='map'></div>
+  
+  )
 }
 
-export default Alerts;
+export default  Maplayer;
+
+
+
+
+
