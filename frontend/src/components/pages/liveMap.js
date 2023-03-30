@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState,  useEffect} from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -17,24 +17,39 @@ TileLayter are prerendered grid tile images
 that view displays to the user
 
 */
-function Maplayer(){
-  const map = new Map({
-    view: new View({
-      center: [-7910361.335273651, 5215196.272155075],
-      zoom: 15,
-      maxZoom: 20,
-      minZoom: 10
-    }),
-    layers: [
-      new TileLayer({
+const TrainMap = () => {
+  const[map, setMap] = useState();
+
+  useEffect(() => {
+    const map = new Map({
+      view: new View({
+        center: [-7910361.335273651, 5215196.272155075],
+        zoom: 15,
+        maxZoom: 20,
+        minZoom: 10
+      }),
+      layers: [
+        new TileLayer({
         source: new OSM()
 
-      })
-    ],
-    target: 'map'
-  });
+          })
+      ],
+      target: 'map'
+      });
+      setMap(map)
+      return () => {
+        map.setTarget(null);
+      };
+}, [])
+ 
+useEffect(()=>{
 
+
+})
+
+useEffect(() => {
   
+})
   
  //display the map on the webpage
   return (
@@ -43,7 +58,7 @@ function Maplayer(){
   )
 }
 
-export default  Maplayer;
+export default  TrainMap;
 
 
 
