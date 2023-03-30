@@ -43,12 +43,24 @@ const TrainMap = () => {
 }, [])
  
 useEffect(()=>{
-
+/*
+This useeffect will be to place the stations on their own vector layer on 
+the map
+*/
 
 })
 
 useEffect(() => {
-  
+ /*
+ this use effect will be used to store the station and vehicle icons 
+ new Style({
+    image: new Icon({
+      source: 'https://upload.wikimedia.org/wikipedia/commons/6/64/MBTA.svg',
+      size: [32, 32],
+      scale: 0.03     
+    })
+  })
+  */
 })
   
  //display the map on the webpage
