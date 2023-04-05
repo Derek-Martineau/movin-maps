@@ -31,7 +31,8 @@ const TrainMap = () => {
       source: source,
       style: new Style({
         image: new Icon({
-          src: 'https://openlayers.org/en/latest/examples/data/icon.png',
+          src: 'https://img.icons8.com/ios/452/train.png',
+          scale: 0.05,
           crossOrigin: 'anonymous',
         }),
       }),
