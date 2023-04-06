@@ -31,9 +31,9 @@ const TrainMap = () => {
       source: source,
       style: new Style({
         image: new Icon({
-          src: 'https://img.icons8.com/ios/452/train.png',
-          scale: 0.05,
-          crossOrigin: 'anonymous',
+          src: 'https://w7.pngwing.com/pngs/210/584/png-transparent-massachusetts-bay-transportation-authority-commuter-rail-haymarket-rapid-transit-bus-bus-angle-public-transport-rail-transport.png',
+          scale: 0.03,
+          //crossOrigin: 'anonymous',
         }),
       }),
     });
