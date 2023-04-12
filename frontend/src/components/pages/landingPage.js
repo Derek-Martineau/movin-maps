@@ -4,6 +4,7 @@ import Card from 'react-bootstrap/Card';
 document.body.style = 'background: purple;';
 const Landingpage = () => {
     return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem'}}>
         <Card style={{ width: '30rem' }} className="mx-2 my-2">
         <Card.Body>
           <Card.Title>Welcome to Movin Maps!</Card.Title>
@@ -14,6 +15,7 @@ const Landingpage = () => {
           <Card.Link href="/login">Login</Card.Link>
         </Card.Body>
       </Card>
+      </div>
     )
 }
 

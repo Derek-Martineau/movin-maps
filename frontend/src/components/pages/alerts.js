@@ -16,8 +16,9 @@ function Alerts() {
   }, []);
 
   return (
-    <div>
-       <h1 className="text-center" style = {{color: 'white'}}>Recent Alerts</h1>
+    
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem'}}>
+      <h1 style = {{color: 'white'}}>Recent Alerts</h1>
       {alerts.map(alert => (
         <Card
         body
@@ -26,11 +27,12 @@ function Alerts() {
         outline
         color="black"
         className="mx-1 my-2"
-        style={{ center: "auto" }}
+        style={{width: "30rem"}}
+
       >
-        <Card.Body>
-        <Card.Title>Alert</Card.Title>
-        <Card.Text>{alert.attributes.header}{alert.attributes.description}</Card.Text>
+        <Card.Body style= {{}}>
+        <Card.Title>{alert.attributes.header}</Card.Title>
+        <Card.Text>{alert.attributes.description}</Card.Text>
         </Card.Body>
       </Card>
       ))}

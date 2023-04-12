@@ -26,7 +26,7 @@ export default function Navbar() {
         <Nav.Link href="/">Start</Nav.Link>
         <Nav.Link href="/home">Home</Nav.Link>
         <Nav.Link href="/privateUserProfile">Profile</Nav.Link>
-        <Nav.Link href="/alerts">Alerts Page</Nav.Link>
+        <Nav.Link href="/alerts">Alerts</Nav.Link>
         <Nav.Link href="/facilities">Facility</Nav.Link>
         <Nav.Link href="/liveMap">Live Map</Nav.Link>
       </Nav>
