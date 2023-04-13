@@ -24,11 +24,12 @@ const TrainMap = () => {
 
   useEffect(() => {
     // Create a new vector source for the MBTA stops
-    const source = new VectorSource();
+    const trainSource = new VectorSource();
+    const subwaySource = new VectorSource();
 
-    // Create a new vector layer with custom styling for the MBTA stops
-    const mbtaLayer = new VectorLayer({
-      source: source,
+    // Create a new vector layer with stying for commuter stops
+    const trainStopLayer = new VectorLayer({
+      source: trainSource,
       style: new Style({
         image: new Icon({
           src: 'https://w7.pngwing.com/pngs/210/584/png-transparent-massachusetts-bay-transportation-authority-commuter-rail-haymarket-rapid-transit-bus-bus-angle-public-transport-rail-transport.png',
@@ -38,10 +39,21 @@ const TrainMap = () => {
       }),
     });
 
+    // Create a new vector layer with styling for subway stops
+    const subwayStopLayer = new VectorLayer({
+      source: subwaySource,
+      style: new Style({
+        image: new Icon({
+          src: 'https://7c90beffdf6f38870374-b33b01690d9e6ccb575cf96b12a903e3.ssl.cf3.rackcdn.com/wp-content/uploads/app_heading_boston.png?x86292',
+          scale: 0.1,
+        }),
+      }),
+    });
+
     // Initialize the map with layers (tile layer from OpenStreetMap and the custom vector layer for MBTA stops)
     const map = new Map({
       target: mapRef.current,
-      layers: [layer, mbtaLayer],
+      layers: [layer, subwayStopLayer, trainStopLayer ],
       view: new View({
         center: [-7910361.335273651, 5215196.272155075],
         zoom: 15,
@@ -52,27 +64,34 @@ const TrainMap = () => {
     setMap(map);
 
     // Fetch MBTA stops data from the MBTA API and add them to the vector source as features
-    axios
-      .get('https://api-v3.mbta.com/stops?filter[route_type]=2')
-      .then((response) => {
-        response.data.data.forEach((stop) => {
-          const coordinates = [
-            stop.attributes.longitude,
-            stop.attributes.latitude,
-          ];
-          const point = new Point(coordinates).transform(
-            'EPSG:4326',
-            'EPSG:3857'
-          );
-          const feature = new Feature({
-            geometry: point,
+    const fetchStops = (routeType, source) => {
+      axios
+        .get(`https://api-v3.mbta.com/stops?filter[route_type]=${routeType}`)
+        .then((response) => {
+          response.data.data.forEach((stop) => {
+            const coordinates = [
+              stop.attributes.longitude,
+              stop.attributes.latitude,
+            ];
+            const point = new Point(coordinates).transform(
+              'EPSG:4326',
+              'EPSG:3857'
+            );
+            const feature = new Feature({
+              geometry: point,
+            });
+            source.addFeature(feature);
           });
-          source.addFeature(feature);
+        })
+        .catch((error) => {
+          console.error('Error fetching MBTA API:', error);
         });
-      })
-      .catch((error) => {
-        console.error('Error fetching MBTA API:', error);
-      });
+    };
+
+    // Fetch train and subway stops
+fetchStops(2, trainSource);
+fetchStops(0, subwaySource);
+fetchStops(1, subwaySource);
 
     // Clean up function to remove the map's target when the component is unmounted
     return () => {
