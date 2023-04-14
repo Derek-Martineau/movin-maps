@@ -10,6 +10,7 @@ import Feature from 'ol/Feature';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import axios from 'axios';
+import { fromLonLat } from 'ol/proj';
 
 const TrainMap = () => {
   // Create a reference to the DOM element where the map will be rendered
@@ -23,23 +24,24 @@ const TrainMap = () => {
   const lightModeLayer = new TileLayer({ source: new OSM() });
 
   useEffect(() => {
-    // Create a new vector source for the MBTA stops
+    // Create new vector sources for the MBTA stops, train locations, and subway locations
     const trainSource = new VectorSource();
     const subwaySource = new VectorSource();
+    const trainLocationsSource = new VectorSource();
+    const subwayLocationsSource = new VectorSource();
 
-    // Create a new vector layer with stying for commuter stops
+    // Create new vector layers with styling for commuter stops
     const trainStopLayer = new VectorLayer({
       source: trainSource,
       style: new Style({
         image: new Icon({
           src: 'https://w7.pngwing.com/pngs/210/584/png-transparent-massachusetts-bay-transportation-authority-commuter-rail-haymarket-rapid-transit-bus-bus-angle-public-transport-rail-transport.png',
           scale: 0.03,
-          //crossOrigin: 'anonymous',
         }),
       }),
     });
 
-    // Create a new vector layer with styling for subway stops
+    // Create new vector layers with styling for subway stops
     const subwayStopLayer = new VectorLayer({
       source: subwaySource,
       style: new Style({
@@ -50,10 +52,32 @@ const TrainMap = () => {
       }),
     });
 
-    // Initialize the map with layers (tile layer from OpenStreetMap and the custom vector layer for MBTA stops)
+    const trainLocationsLayer = new VectorLayer({
+      source: trainLocationsSource,
+      style: new Style({
+        image: new Icon({
+          anchor: [0.5, 1],
+          src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Icon-mode-commuter-rail-default.svg/1024px-Icon-mode-commuter-rail-default.svg.png',
+          scale: 0.03,
+        }),
+      }),
+    });
+
+    const subwayLocationsLayer = new VectorLayer({
+      source: subwayLocationsSource,
+      style: new Style({
+        image: new Icon({
+          anchor: [0.5, 1],
+          src: 'https://play-lh.googleusercontent.com/LG-nFApO81F2vnR65bf-5IvI6x4bBpyEwmehnQwK6Bkq565Wcyg0nlYnQGYYXCHaPQ',
+          scale: 0.05,
+        }),
+      }),
+    });
+
+    // Initialize the map with layers (tile layer from OpenStreetMap, custom vector layers for MBTA stops, train locations, and subway locations)
     const map = new Map({
       target: mapRef.current,
-      layers: [layer, subwayStopLayer, trainStopLayer ],
+      layers: [layer, subwayStopLayer, trainStopLayer, subwayLocationsLayer, trainLocationsLayer],
       view: new View({
         center: [-7910361.335273651, 5215196.272155075],
         zoom: 15,
@@ -89,17 +113,52 @@ const TrainMap = () => {
     };
 
     // Fetch train and subway stops
-fetchStops(2, trainSource);
-fetchStops(0, subwaySource);
-fetchStops(1, subwaySource);
+    fetchStops(2, trainSource);
+    fetchStops(0, subwaySource);
+    fetchStops(1, subwaySource);
 
-    // Clean up function to remove the map's target when the component is unmounted
+    const updateTrainLocations = async () => {
+      const response = await axios.get('https://api-v3.mbta.com/vehicles?filter[route_type]=2');
+      const vehicles = response.data.data;
+
+      trainLocationsSource.clear();
+
+      vehicles.forEach((vehicle) => {
+        const coordinates = fromLonLat([parseFloat(vehicle.attributes.longitude), parseFloat(vehicle.attributes.latitude)]);
+        const point = new Point(coordinates);
+        const feature = new Feature(point);
+
+        trainLocationsSource.addFeature(feature);
+      });
+    };
+
+    const updateSubwayLocations = async () => {
+      const response = await axios.get('https://api-v3.mbta.com/vehicles?filter[route_type]=0,1');
+      const vehicles = response.data.data;
+
+      subwayLocationsSource.clear();
+
+      vehicles.forEach((vehicle) => {
+        const coordinates = fromLonLat([parseFloat(vehicle.attributes.longitude), parseFloat(vehicle.attributes.latitude)]);
+        const point = new Point(coordinates);
+        const feature = new Feature(point);
+
+        subwayLocationsSource.addFeature(feature);
+      });
+    };
+
+    const intervalIdTrain = setInterval(updateTrainLocations, 10000);
+    const intervalIdSubway = setInterval(updateSubwayLocations, 10000);
+    updateTrainLocations();
+    updateSubwayLocations();
+
     return () => {
+      clearInterval(intervalIdTrain);
+      clearInterval(intervalIdSubway);
       map.setTarget(null);
     };
   }, [layer]);
 
-  // Function to switch between light and dark mode layers
   function layerSwitch() {
     if (layer.getSource() instanceof OSM) {
       setLayer(
@@ -115,7 +174,6 @@ fetchStops(1, subwaySource);
     }
   }
 
-  // Render the map component with a layer switch checkbox
   return (
     <div style={{ height: '874px', width: '1878px' }} className="map">
       <div
@@ -155,7 +213,6 @@ fetchStops(1, subwaySource);
       </div>
     </div>
   );
-  
-  };
-  
-  export default TrainMap;
+};
+
+export default TrainMap;
