@@ -35,7 +35,7 @@ const TrainMap = () => {
       source: trainSource,
       style: new Style({
         image: new Icon({
-          src: 'https://w7.pngwing.com/pngs/210/584/png-transparent-massachusetts-bay-transportation-authority-commuter-rail-haymarket-rapid-transit-bus-bus-angle-public-transport-rail-transport.png',
+          src: '/trainFacility.png',
           scale: 0.03,
         }),
       }),
@@ -46,7 +46,7 @@ const TrainMap = () => {
       source: subwaySource,
       style: new Style({
         image: new Icon({
-          src: 'https://7c90beffdf6f38870374-b33b01690d9e6ccb575cf96b12a903e3.ssl.cf3.rackcdn.com/wp-content/uploads/app_heading_boston.png?x86292',
+          src: '/subwayStops.png',
           scale: 0.1,
         }),
       }),
@@ -57,7 +57,7 @@ const TrainMap = () => {
       style: new Style({
         image: new Icon({
           anchor: [0.5, 1],
-          src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Icon-mode-commuter-rail-default.svg/1024px-Icon-mode-commuter-rail-default.svg.png',
+          src: '/train.png',
           scale: 0.03,
         }),
       }),
@@ -68,7 +68,7 @@ const TrainMap = () => {
       style: new Style({
         image: new Icon({
           anchor: [0.5, 1],
-          src: 'https://play-lh.googleusercontent.com/LG-nFApO81F2vnR65bf-5IvI6x4bBpyEwmehnQwK6Bkq565Wcyg0nlYnQGYYXCHaPQ',
+          src: '/subway.png',
           scale: 0.05,
         }),
       }),
@@ -147,8 +147,8 @@ const TrainMap = () => {
       });
     };
 
-    const intervalIdTrain = setInterval(updateTrainLocations, 10000);
-    const intervalIdSubway = setInterval(updateSubwayLocations, 10000);
+    const intervalIdTrain = setInterval(updateTrainLocations, 5000);
+    const intervalIdSubway = setInterval(updateSubwayLocations, 5000);
     updateTrainLocations();
     updateSubwayLocations();
 
@@ -175,7 +175,7 @@ const TrainMap = () => {
   }
 
   return (
-    <div style={{ width: '100%', height: '100vh' }} className="map">
+    <div style={{ height: '100vh', width: '100%' }} className="map">
       <div
         ref={mapRef}
         id="map"
