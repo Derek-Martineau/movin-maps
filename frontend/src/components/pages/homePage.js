@@ -1,54 +1,88 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import getUserInfo from '../../utilities/decodeJwt'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-document.body.style = 'background: purple;';
 const HomePage = () => {
-    const [user, setUser] = useState({})
-    const navigate = useNavigate()
-    const handleClick = (e) => {
-        e.preventDefault();
-        localStorage.removeItem('accessToken')
-        return navigate('/')
-    }
+  const [developers, setDevelopers] = useState([]);
 
-    useEffect(() => {
-        setUser(getUserInfo())
-    }, [])
+  useEffect(() => {
+    const fetchDevelopers = async () => {
+      try {
+        const devs = await getAllDevelopers();
+        setDevelopers(devs);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
+    fetchDevelopers();
+  }, []);
 
-    if (!user) return (
-        <div><h4>Log in to view this page.</h4></div>)
-    const { id, email, username, password, favRoute } = user
-    return (
-        <>
-            <div>
-                <h3>
-                    Welcome
-                    <span className='username'> @{username}</span>
-                </h3>
-                <h3>
-                    Your userId in mongo db is
-                    <span className='userId'> {id}</span>
-                </h3>
-                <h3>
-                    Your registered email is
-                    <span className='email'> {email}</span>
-                </h3>
-                <h3>
-                    Your password is
-                    <span className='password'> {password} ( hashed )</span>
-                </h3>
-                <h3>
-                    Your favorite route is
-                    <span className='favRoute'> {favRoute}</span>
-                </h3>
-            </div>
-            <button onClick={(e) => handleClick(e)}>
-                Log Out
-            </button>
-        </>
-    )
-}
+  useEffect(() => {
+    document.body.style.backgroundColor = 'purple';
 
-export default HomePage
+    return () => {
+      document.body.style.backgroundColor = null;
+    };
+  }, []);
+
+  function getAllDevelopers() {
+    return fetch('http://localhost:8081/developer/getAll')
+      .then(response => response.json())
+      .then(data => {
+        const developers = data.map(developer => ({
+          fName: developer.fName,
+          lName: developer.lName,
+          projDescription: developer.projDescription
+        }));
+        return developers;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  return (
+    <>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '2rem',
+        }}
+      >
+        <h1>Welcome To Movin' Maps!</h1>
+        <p>
+          The MBTA offers various transportation methods to the Massachusetts
+          area through services such as the subway system, commuter rail, bus,
+          and ferry routes. These transportation methods can be difficult to
+          navigate. Movin’ Maps offers users real-time locations of transport
+          through a GUI to make it easier to follow and plan routes. Users will
+          be able to store their favorite routes on their account, filter the
+          GUI to show specific routes or methods of transportation, and be
+          recommended routes relative to their location. The status will display
+          arrivals and alerts will update with delays.
+        </p>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '2rem',
+        }}
+      >
+        <h2>Developers</h2>
+        {developers.map((developer, index) => (
+          <div key={index} style={{ marginBottom: '1rem' }}>
+            <p>
+              {developer.fName} {developer.lName}: {developer.projDescription}
+            </p>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
+
+export default HomePage;

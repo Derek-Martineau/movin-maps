@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-//user schema/model
+// Schema for the developer
 const developerSchema = new mongoose.Schema(
   {
     fName: {
@@ -22,5 +22,5 @@ const developerSchema = new mongoose.Schema(
   },
   { collection: "developerSchema" }
 );
-
+// Export the model
 module.exports = mongoose.model('developerSchema', developerSchema)
