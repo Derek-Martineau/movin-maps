@@ -36,7 +36,7 @@ const TrainMap = () => {
       style: new Style({
         image: new Icon({
           src: '/trainFacility.png',
-          scale: 0.03,
+          scale: 0.02,
         }),
       }),
     });
@@ -47,7 +47,7 @@ const TrainMap = () => {
       style: new Style({
         image: new Icon({
           src: '/subwayStops.png',
-          scale: 0.1,
+          scale: 0.09,
         }),
       }),
     });
@@ -58,7 +58,7 @@ const TrainMap = () => {
         image: new Icon({
           anchor: [0.5, 1],
           src: '/train.png',
-          scale: 0.03,
+          scale: 0.025,
         }),
       }),
     });
@@ -69,7 +69,7 @@ const TrainMap = () => {
         image: new Icon({
           anchor: [0.5, 1],
           src: '/subway.png',
-          scale: 0.05,
+          scale: 0.015,
         }),
       }),
     });
@@ -147,8 +147,8 @@ const TrainMap = () => {
       });
     };
 
-    const intervalIdTrain = setInterval(updateTrainLocations, 5000);
-    const intervalIdSubway = setInterval(updateSubwayLocations, 5000);
+    const intervalIdTrain = setInterval(updateTrainLocations, 7000);
+    const intervalIdSubway = setInterval(updateSubwayLocations, 7000);
     updateTrainLocations();
     updateSubwayLocations();
 
