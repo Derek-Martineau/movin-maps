@@ -175,7 +175,7 @@ const TrainMap = () => {
   }
 
   return (
-    <div style={{ height: '874px', width: '1878px' }} className="map">
+    <div style={{ width: '100%', height: '100vh' }} className="map">
       <div
         ref={mapRef}
         id="map"
