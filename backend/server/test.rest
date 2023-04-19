@@ -84,6 +84,17 @@ Content-Type: application/json
     "projDescrition" : "This is a project description",
 }
 
+###
+POST http://localhost:8081/user/editDeveloper
+Content-Type: application/json
+
+{
+    "developerId": "642c351d33f7fa1ca979051b",
+    "fName": "Derek Edit",
+    "lName": "Martineau",
+    "projDescription": "Developed new Backend collection to display all developers"
+}
+
 ### delete developer Currently Unavaliable
 POST http://localhost:8081/developer/deleteDeveloper
 Content-Type: application/json 
