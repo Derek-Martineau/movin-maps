@@ -164,7 +164,7 @@ const TrainMap = () => {
       setLayer(
         new TileLayer({
           source: new XYZ({
-            url: 'https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
+            url: 'https://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
             tileSize: 512,
           }),
         })
