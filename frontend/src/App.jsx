@@ -7,6 +7,7 @@ import Navbar from "./components/navbar";
 import LandingPage from "./components/pages/landingPage";
 import MbtaAlertsPage from "./components/pages/alerts";
 import Facilities from "./components/pages/facilities";
+import RoutesPage from "./components/pages/routes";
 import HomePage from "./components/pages/homePage";
 import Login from "./components/pages/loginPage";
 import Signup from "./components/pages/registerPage";
@@ -38,6 +39,7 @@ const App = () => {
           <Route exact path="/alerts" element={<MbtaAlertsPage />} />
           <Route path="/liveMap" element={<LiveMap />} />
           <Route path="/facilities" element={<Facilities />} />
+          <Route path="/routes" element={<RoutesPage />} />
         </Routes>
       </UserContext.Provider>
     </>
