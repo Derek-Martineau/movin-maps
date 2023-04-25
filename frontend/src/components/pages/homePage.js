@@ -57,8 +57,9 @@ const HomePage = () => {
     fontSize: '1.3rem',
     padding: '0 3rem',
     paddingBottom: '27rem',
-
+    boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.5)',
   }}
+  
 >
   <h1 style={{ marginBottom: '2rem' }}>Welcome To Movin' Maps!</h1>
   <p style={{ marginBottom: '5rem' }}>
@@ -74,30 +75,24 @@ const HomePage = () => {
   </p>
 </div>
 
-      <div
-
-style={{
-
-  backgroundPosition: 'center bottom',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: 'white',
-  fontSize: '1.3rem',
-  padding: '0 3rem',
-
-}}
+<div
+  style={{
+    backgroundPosition: 'center bottom',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+    fontSize: '1.3rem',
+    padding: '0 3rem',
+    marginTop: '20px' // add margin to top
+  }}
 >
-
-        <h2 style={{ marginBottom: '2rem' }}>Meet The Developers</h2>
-        <p style={{ marginBottom: '4rem', padding: '0 24rem' }}>
-          Movin' Maps was created for CSC300 the 
-          Software Engineering course taught by Professor Allan Brockenbrogh at Salem State University. Movin’ Maps is a project created by a small team of 3 developers studying Computer Science. Together we entered Software Engineering knowing very little about the subject, we
-          were able to learn about the complete life cycle of the software development process and
-          how to version control such as Git to work as a team. Along with learning new Programming languages JavaScript and CSS we were also able to learn React. We hope you enjoy our project!
-        </p>
-        </div>
+  <h2 style={{ marginBottom: '1rem' }}>Meet The Developers</h2>
+  <p style={{ marginBottom: '2rem', padding: '0 24rem' }}>
+    Movin' Maps was created for CSC300 the Software Engineering course taught by Professor Allan Brockenbrogh at Salem State University. Movin’ Maps is a project created by a small team of 3 developers studying Computer Science. Together we entered Software Engineering knowing very little about the subject, we were able to learn about the complete life cycle of the software development process and how to version control such as Git to work as a team. Along with learning new Programming languages JavaScript and CSS we were also able to learn React. We hope you enjoy our project!
+  </p>
+</div>
 
         <div style={{ display: 'flex', justifyContent: 'center', marginLeft: '30px' }}>
   <div style={{ display: 'flex', flexDirection: 'column' }}>
