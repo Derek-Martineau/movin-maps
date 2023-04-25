@@ -19,7 +19,7 @@ function Facilities() {
     }
     fetchData();
   }, []);
-
+  
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
     const selected = facilities.find(facility => facility.attributes.long_name === selectedName);
@@ -27,11 +27,22 @@ function Facilities() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem' }}>
-      <h1 style={{ color: 'white' }}>Facilities</h1>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '2rem',
+        backgroundImage: `url('/facilities.png')`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        height: '100vh'
+      }}
+    >
+      <h1 style={{ color: 'black' }}>Facilities</h1>
       <Form>
         <Form.Group controlId="facilitySelect">
-          <Form.Label style={{ color: 'white' }}>Select Facility</Form.Label>
+          <Form.Label style={{ color: 'black' }}>Select Facility</Form.Label>
           <Form.Control as="select" style={{ width: '15rem' }} onChange={handleSelectChange}>
             <option value="">Select a facility</option>
             {facilityNames.map((name, index) => (
