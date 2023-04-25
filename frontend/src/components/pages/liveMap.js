@@ -50,9 +50,9 @@ const TrainMap = () => {
         minZoom: 10,
       }),
     });
-
+  
     setMap(initialMap);
-
+  
     return () => {
       initialMap.setTarget(null);
     };
@@ -107,73 +107,139 @@ const TrainMap = () => {
         }),
       }),
     });
+    
 
-    // Clear the sources when switching transit types or routes
-    trainSource.clear();
-    subwaySource.clear();
-    trainLocationsSource.clear();
-    subwayLocationsSource.clear();
 
-    const fetchStops = async () => {
-      try {
-        const stopResponse = await axios.get(`https://api-v3.mbta.com/stops?filter[route]=${selectedRoute}`);
-        stopResponse.data.data.forEach(stop => {
-          const coordinates = fromLonLat([parseFloat(stop.attributes.longitude), parseFloat(stop.attributes.latitude)]);
-          const stopPoint = new Point(coordinates);
-          const stopFeature = new Feature({
-            geometry: stopPoint,
-          });
-
-          if (selectedTransit === "0") {
-            subwaySource.addFeature(stopFeature);
-          } else if (selectedTransit === "2") {
-            trainSource.addFeature(stopFeature);
-          }
-        });
-      } catch (error) {
-        console.error('Error fetching stops:', error);
-      }
-    };
-
-    const fetchLocations = async () => {
-      try {
-        const locationResponse = await axios.get(`https://api-v3.mbta.com/vehicles?filter[route]=${selectedRoute}`);
-        locationResponse.data.data.forEach(vehicle => {
-          const coordinates = fromLonLat([parseFloat(vehicle.attributes.longitude), parseFloat(vehicle.attributes.latitude)]);
-          const locationPoint = new Point(coordinates);
-          const locationFeature = new Feature({
-            geometry: locationPoint,
-          });
-
-          if (selectedTransit === "0") {
-            subwayLocationsSource.addFeature(locationFeature);
-          } else if (selectedTransit === "2") {
-            trainLocationsSource.addFeature(locationFeature);
-          }
-        });
-      } catch (error) {
-        console.error('Error fetching locations:', error);
-      }
-    };
-
-    if (selectedRoute) {
-      fetchStops();
-      fetchLocations();
-    }
+    const layersArray = map.getLayers().getArray();
 
     if (selectedTransit === "0") {
-      map.addLayer(subwayStopLayer);
-      map.addLayer(subwayLocationsLayer);
-      map.removeLayer(trainStopLayer);
-      map.removeLayer(trainLocationsLayer);
+      if (!layersArray.includes(subwayStopLayer)) {
+        map.addLayer(subwayStopLayer);
+      }
+      if (!layersArray.includes(subwayLocationsLayer)) {
+        map.addLayer(subwayLocationsLayer);
+      }
+      if (layersArray.includes(trainStopLayer)) {
+        map.removeLayer(trainStopLayer);
+      }
+      if (layersArray.includes(trainLocationsLayer)) {
+        map.removeLayer(trainLocationsLayer);
+      }
     } else if (selectedTransit === "2") {
-      map.addLayer(trainStopLayer);
-      map.addLayer(trainLocationsLayer);
-      map.removeLayer(subwayStopLayer);
-      map.removeLayer(subwayLocationsLayer);
+      if (!layersArray.includes(trainStopLayer)) {
+        map.addLayer(trainStopLayer);
+      }
+      if (!layersArray.includes(trainLocationsLayer)) {
+        map.addLayer(trainLocationsLayer);
+      }
+      if (layersArray.includes(subwayStopLayer)) {
+        map.removeLayer(subwayStopLayer);
+      }
+      if (layersArray.includes(subwayLocationsLayer)) {
+        map.removeLayer(subwayLocationsLayer);
+      }
+    }      
+
+    const fetchStops = (routeType, source, routeId) => {
+      let url = `https://api-v3.mbta.com/stops?filter[route_type]=${routeType}`;
+      if (routeId !== "") {
+        url += `&filter[route]=${routeId}`;
+      }
+      axios
+        .get(url)
+        .then((response) => {
+          response.data.data.forEach((stop) => {
+            const coordinates = [
+              stop.attributes.longitude,
+              stop.attributes.latitude,
+            ];
+            const point = new Point(coordinates).transform(
+              "EPSG:4326",
+              "EPSG:3857"
+            );
+            const feature = new Feature({
+              geometry: point,
+            });
+            source.addFeature(feature);
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching MBTA API:", error);
+        });
+    };
+
+    const updateTrainLocations = async () => {
+      try {
+        let url = 'https://api-v3.mbta.com/vehicles?filter[route_type]=2';
+        if (selectedTransit === "2" && selectedRoute !== "") {
+          url += `&filter[route]=${selectedRoute}`;
+        }
+        const response = await axios.get(url);
+        const vehicles = response.data.data;
+
+        trainLocationsSource.clear();
+
+        vehicles.forEach((vehicle) => {
+          const coordinates = fromLonLat([parseFloat(vehicle.attributes.longitude), parseFloat(vehicle.attributes.latitude)]);
+          const point = new Point(coordinates);
+          const feature = new Feature(point);
+
+          trainLocationsSource.addFeature(feature);
+        });
+      } catch (error) {
+        console.error('Error fetching train locations:', error);
+      }
+    };
+
+    const updateSubwayLocations = async () => {
+      try {
+        let url = 'https://api-v3.mbta.com/vehicles?filter[route_type]=0,1';
+        if (selectedTransit === "0" && selectedRoute !== "") {
+          url += `&filter[route]=${selectedRoute}`;
+        }
+        const response = await axios.get(url);
+        const vehicles = response.data.data;
+
+        subwayLocationsSource.clear();
+
+        vehicles.forEach((vehicle) => {
+          const coordinates = fromLonLat([parseFloat(vehicle.attributes.longitude), parseFloat(vehicle.attributes.latitude)]);
+          const point = new Point(coordinates);
+          const feature = new Feature(point);
+
+          subwayLocationsSource.addFeature(feature);
+        });
+      } catch (error) {
+        console.error('Error fetching subway locations:', error);
+      }
+    };
+
+    if (selectedRoute !== "") {
+      trainSource.clear();
+      subwaySource.clear();
+      trainLocationsSource.clear();
+      subwayLocationsSource.clear();
+    
+      fetchStops(2, trainSource, selectedRoute);
+      fetchStops(0, subwaySource, selectedRoute);
+      fetchStops(1, subwaySource, selectedRoute);
     }
 
-  }, [map, selectedTransit, selectedRoute]);
+    if (selectedRoute !== "") {
+      fetchStops(2, trainSource, selectedRoute);
+      fetchStops(0, subwaySource, selectedRoute);
+      fetchStops(1, subwaySource, selectedRoute);
+    }
+
+    const intervalIdTrain = setInterval(updateTrainLocations, 5000);
+    const intervalIdSubway = setInterval(updateSubwayLocations, 5000);
+
+    return () => {
+      clearInterval(intervalIdTrain);
+      clearInterval(intervalIdSubway);
+    };
+
+  }, [map, layer, selectedTransit, selectedRoute]);
 
   return (
     <div>
