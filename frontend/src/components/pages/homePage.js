@@ -17,7 +17,7 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    document.body.style.backgroundColor = 'purple';
+    document.body.style.backgroundColor = 'darkgray    ';
 
     return () => {
       document.body.style.backgroundColor = null;
@@ -42,29 +42,54 @@ const HomePage = () => {
 
   return (
     <>
+     <div
+  style={{
+    backgroundImage: `url('/HomePageOverlay.jpeg')`,
+    backgroundSize: '100% 100%',
+    backgroundPosition: 'center bottom',
+    height: '80vh',
+    width: '99.2vw', // Set width to 100vw to match screen width
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+    fontSize: '1.3rem',
+    padding: '0 3rem',
+    paddingBottom: '27rem',
+
+  }}
+>
+  <h1 style={{ marginBottom: '2rem' }}>Welcome To Movin' Maps!</h1>
+  <p style={{ marginBottom: '5rem' }}>
+    The MBTA offers various transportation methods to the Massachusetts
+    area through services such as the subway system, commuter rail, bus,
+    and ferry routes. These transportation methods can be difficult to
+    navigate. Movin’ Maps offers users real-time locations of transport
+    through a GUI to make it easier to follow and plan routes. Users will
+    be able to store their favorite routes on their account, filter the
+    GUI to show specific routes or methods of transportation, and be
+    recommended routes relative to their location. The status will display
+    arrivals and alerts will update with delays.
+  </p>
+</div>
+
       <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: '4rem',
-          color: 'white',
-          fontSize: '1.3rem',
-        }}
-      >
-        <h1 style={{ marginBottom: '2rem' }}>Welcome To Movin' Maps!</h1>
-        <p style={{ marginBottom: '5rem', padding: '0 24rem' }}>
-          The MBTA offers various transportation methods to the Massachusetts
-          area through services such as the subway system, commuter rail, bus,
-          and ferry routes. These transportation methods can be difficult to
-          navigate. Movin’ Maps offers users real-time locations of transport
-          through a GUI to make it easier to follow and plan routes. Users will
-          be able to store their favorite routes on their account, filter the
-          GUI to show specific routes or methods of transportation, and be
-          recommended routes relative to their location. The status will display
-          arrivals and alerts will update with delays.
-        </p >
-        
+
+style={{
+
+  backgroundPosition: 'center bottom',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: 'white',
+  fontSize: '1.3rem',
+  padding: '0 3rem',
+
+}}
+>
+
         <h2 style={{ marginBottom: '2rem' }}>Meet The Developers</h2>
         <p style={{ marginBottom: '4rem', padding: '0 24rem' }}>
           Movin' Maps was created for CSC300 the 
@@ -72,34 +97,40 @@ const HomePage = () => {
           were able to learn about the complete life cycle of the software development process and
           how to version control such as Git to work as a team. Along with learning new Programming languages JavaScript and CSS we were also able to learn React. We hope you enjoy our project!
         </p>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center', marginLeft: '30px' }}>
+  <div style={{ display: 'flex', flexDirection: 'column' }}>
+    {developers.length >= 1 && (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10rem' }}>
+        <img src={'/derek.png'} alt="Derek" style={{ width: '225px', height: '270px', borderRadius: '50%' }} />
+        <p style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>{developers[0].fName} {developers[0].lName}</p>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
-  <img src={'/derek.png'} alt="Derek" style={{ width: '300px', marginRight: '20rem'}} />
-  <img src={'/dan.png'} alt="Dan" style={{ width: '300px', marginRight: '14rem' }} />
-  <img src={'/archie.png'} alt="Archie" style={{ width: '300px', marginLeft: '10rem' }} />
+    )}
+    {developers.length >= 2 && (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10rem' }}>
+        <img src={'/dan.png'} alt="Dan" style={{ width: '225px', height: '270px', borderRadius: '50%' }} />
+        <p style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>{developers[1].fName} {developers[1].lName}</p>
+      </div>
+    )}
+    {developers.length >= 3 && (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10rem' }}>
+        <img src={'/archie.png'} alt="Archie" style={{ width: '225px', height: '270px', borderRadius: '50%' }} />
+        <p style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>{developers[2].fName} {developers[2].lName}</p>
+      </div>
+    )}
+  </div>
+  <div style={{ flex: '1', marginLeft: '2rem' }}>
+    {developers.map((developer, index) => (
+      <div key={index} style={{ marginBottom: '18rem', padding: '5rem 5rem', marginRight: '6rem', color: 'white'}}>
+        <p>
+          {developer.projDescription}
+        </p>
+      </div>
+    ))}
+  </div>
 </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          padding: '0rem',
-          color: 'white',
-          fontSize: '1.3rem',
-        }}
-      >
-        {developers.map((developer, index) => (
-          <div key={index} style={{ marginBottom: '0rem', padding: '3rem 10rem', marginRight: '6rem'}}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0rem' }}>
-            
-      </div>
-            <p>
-              {developer.fName} {developer.lName} <br /> {developer.projDescription}
-            </p>
-          </div>
-        ))}
-      </div>
     </>
   );
 
