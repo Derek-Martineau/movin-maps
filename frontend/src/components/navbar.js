@@ -20,19 +20,21 @@ export default function Navbar() {
   // we have an issue with getUserInfo() returning null after a few minutes
   // it seems.
   return (
-    <ReactNavbar bg="dark" variant="dark" text = "white">
+    <ReactNavbar style={{ backgroundColor: "#a9a9a9" }}>
     <Container>
       <Nav className="me-auto">
-        <Nav.Link href="/">Start</Nav.Link>
-        <Nav.Link href="/home">Home</Nav.Link>
-        <Nav.Link href="/privateUserProfile">Profile</Nav.Link>
-        <Nav.Link href="/alerts">Alerts</Nav.Link>
-        <Nav.Link href="/facilities">Facility</Nav.Link>
-        <Nav.Link href="/routes">Routes</Nav.Link>
-        <Nav.Link href="/liveMap">Live Map</Nav.Link>
+        <Nav.Link href="/" style={{ color: "white" }}>Start</Nav.Link>
+        <Nav.Link href="/home" style={{ color: "white" }}>Home</Nav.Link>
+        <Nav.Link href="/privateUserProfile" style={{ color: "white" }}>Profile</Nav.Link>
+        <Nav.Link href="/alerts" style={{ color: "white" }}>Alerts</Nav.Link>
+        <Nav.Link href="/facilities" style={{ color: "white" }}>Facility</Nav.Link>
+        <Nav.Link href="/routes" style={{ color: "white" }}>Routes</Nav.Link>
+        <Nav.Link href="/liveMap" style={{ color: "white" }}>Live Map</Nav.Link>
       </Nav>
     </Container>
   </ReactNavbar>
+  
+
 
   );
 }

@@ -17,7 +17,7 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    document.body.style.backgroundColor = 'darkgray    ';
+    document.body.style.backgroundColor = 'darkgray';
 
     return () => {
       document.body.style.backgroundColor = null;
@@ -98,19 +98,19 @@ const HomePage = () => {
   <div style={{ display: 'flex', flexDirection: 'column' }}>
     {developers.length >= 1 && (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10rem' }}>
-        <img src={'/derek.png'} alt="Derek" style={{ width: '225px', height: '270px', borderRadius: '50%' }} />
+        <img src={'/derek.png'} alt="Derek" style={{ width: '400px', height: '450px', borderRadius: '50%' }} />
         <p style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>{developers[0].fName} {developers[0].lName}</p>
       </div>
     )}
     {developers.length >= 2 && (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10rem' }}>
-        <img src={'/dan.png'} alt="Dan" style={{ width: '225px', height: '270px', borderRadius: '50%' }} />
+        <img src={'/dan.png'} alt="Dan" style={{ width: '400px', height: '450px', borderRadius: '50%' }} />
         <p style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>{developers[1].fName} {developers[1].lName}</p>
       </div>
     )}
     {developers.length >= 3 && (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10rem' }}>
-        <img src={'/archie.png'} alt="Archie" style={{ width: '225px', height: '270px', borderRadius: '50%' }} />
+        <img src={'/archie.png'} alt="Archie" style={{ width: '400px', height: '450px', borderRadius: '50%' }} />
         <p style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>{developers[2].fName} {developers[2].lName}</p>
       </div>
     )}
