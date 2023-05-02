@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 const { newUserValidation } = require('../models/userValidator')
 const newUserModel = require('../models/userModel')
 
+// @route POST api/user
+// create new user
 router.post('/signup', async (req, res) => {
     const { error } = newUserValidation(req.body);
     console.log(error)
@@ -31,7 +33,7 @@ router.post('/signup', async (req, res) => {
         favRoute: favRoute 
     });
 
-   
+   //saves the new user
     try {
         const saveNewUser = await createUser.save();
         res.send(saveNewUser);
