@@ -73,14 +73,14 @@ POST http://localhost:8081/developer/createDeveloper
     projDescrition : "This is a project description",
 }
 
-### edit developer Currently Unavaliable
+### edit developer
 POST http://localhost:8081/developer/editDeveloper
 Content-Type: application/json 
 
 {
     "developerId" : "642c351d33f7fa1ca979051b",
-    "fName" : "Archie",
-    "lName" : "Berduo",
+    "fName" : "Derek",
+    "lName" : "Martineau",
     "projDescrition" : "This is a project description",
 }
 
