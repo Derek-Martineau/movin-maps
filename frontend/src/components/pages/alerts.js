@@ -16,34 +16,47 @@ function Alerts() {
   }, []);
 
   return (
-    
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem'}}>
-      <h1 style = {{color: 'white'}}>Recent Alerts</h1>
-      {alerts.map(alert => (
-        <Card
-        body
-        bg = "white"
-        text = "black"
-        outline
-        color="black"
-        className="mx-1 my-2"
-        style={{width: "30rem"}}
-
+    <div 
+      style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        padding: '2rem', 
+        backgroundImage: `url('/AlertPageOverlay.png')`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        height: '150vh'
+      }}
+    >
+      <h1 style={{color: 'white'}}>Recent Alerts</h1>
+      <div 
+        style={{
+          height: '50vh',
+          width: '100%',
+          overflow: 'scroll',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
       >
-        <Card.Body style= {{}}>
-        <Card.Title>{alert.attributes.header}</Card.Title>
-        <Card.Text>{alert.attributes.description}</Card.Text>
-        </Card.Body>
-      </Card>
-      ))}
-
-        <h1>Alerts!</h1>
-      {alerts.map(alert => (
-        <div key={alert.id}>
-          <h3>{alert.attributes.header}</h3>
-          <p>{alert.attributes.description}</p>
-        </div>
-      ))}
+        {alerts.map(alert => (
+          <Card
+            body
+            bg="white"
+            text="black"
+            outline
+            color="black"
+            className="mx-2 my-4"
+            style={{width: "30rem"}}
+            key={alert.id}
+          >
+            <Card.Body>
+              <Card.Title>{alert.attributes.header}</Card.Title>
+              <Card.Text>{alert.attributes.description}</Card.Text>
+            </Card.Body>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }

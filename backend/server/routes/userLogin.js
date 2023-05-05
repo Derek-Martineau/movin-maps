@@ -6,7 +6,8 @@ const newUserModel = require('../models/userModel')
 const bcrypt = require('bcrypt')
 const { generateAccessToken } = require('../utilities/generateToken')
 
-
+// @route POST api/user
+// login user
 router.post('/login', async (req, res) => {
 
   const { error } = userLoginValidation(req.body);
@@ -27,7 +28,7 @@ router.post('/login', async (req, res) => {
     password,
     user.password
   );
-
+//if password is not valid, return error
   if (!checkPasswordValidity)
     return res
       .status(401)

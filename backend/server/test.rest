@@ -47,7 +47,7 @@ GET  http://localhost:8081/user/getUserById
 Content-Type: application/json 
 
 {
-    "userId" : "634edb2a16710b2cda6fb370"
+    "userId" : "641c590b0ec438c053e97273"
 }
 
 ###
@@ -56,49 +56,13 @@ POST  http://localhost:8081/user/deleteAll
 ### get all developers
 GET http://localhost:8081/developer/getAll
 
-### get developer by id
-GET http://localhost:8081/developer/getDeveloperById
-Content-Type: application/json 
-
-{
-    "developerId" : "642c351d33f7fa1ca979051b"
-}
-
-### create developer currently unavaliable
-POST http://localhost:8081/developer/createDeveloper
-
-{
-    fName : "Archie",
-    lName : "Berduo",
-    projDescrition : "This is a project description",
-}
-
-### edit developer Currently Unavaliable
+### edit developer
 POST http://localhost:8081/developer/editDeveloper
 Content-Type: application/json 
 
 {
     "developerId" : "642c351d33f7fa1ca979051b",
-    "fName" : "Archie",
-    "lName" : "Berduo",
+    "fName" : "Derek",
+    "lName" : "Martineau",
     "projDescrition" : "This is a project description",
-}
-
-###
-POST http://localhost:8081/user/editDeveloper
-Content-Type: application/json
-
-{
-    "developerId": "642c351d33f7fa1ca979051b",
-    "fName": "Derek Edit",
-    "lName": "Martineau",
-    "projDescription": "Developed new Backend collection to display all developers"
-}
-
-### delete developer Currently Unavaliable
-POST http://localhost:8081/developer/deleteDeveloper
-Content-Type: application/json 
-
-{
-    "developerId" : "642c351d33f7fa1ca979051b"
 }
