@@ -3,14 +3,18 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useNavigate } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
+import { Container } from 'react-bootstrap';
+import axios from 'axios';
 
 const PrivateUserProfile = () => {
   const [show, setShow] = useState(false);
   const [user, setUser] = useState({});
   const [showDetails, setShowDetails] = useState(false);
+  const [output, setOutput] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
   // handle logout button
   const handleLogout = () => {
@@ -22,6 +26,70 @@ const PrivateUserProfile = () => {
     setUser(getUserInfo());
   }, []);
 
+  function clearProfileDetails() {
+    var profileDetails = document.getElementById("profile-details");
+    profileDetails.innerHTML = "";
+  }
+
+  const url = "http://localhost:8081/user/editUser";
+
+  // handle form field changes
+  const [form, setValues] = useState({ userId: "", username: "", email: "", password: "" });
+  const handleChange = ({ currentTarget: input }) => {
+    setValues({ ...form, [input.id]: input.value });
+    if (!!errors[input]) {
+      setErrors({
+        ...errors,
+        [input]: null,
+      });
+    }
+  };
+  
+  // handle form submission with submit button
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const newErrors = findFormErrors();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      try {
+        const { data: res } = await axios.put(url, form);
+        const { accessToken } = res;
+        //store token in localStorage
+        localStorage.setItem("accessToken", accessToken);
+        navigate("/privateuserprofile");
+      } catch (error) {
+        if (
+          error.response &&
+          error.response.status != 409 &&
+          error.response.status >= 400 &&
+          error.response.status <= 500
+        ) {
+          window.alert(error.response.data.message);
+        }
+        if (error.response && error.response.status === 409) {
+          setErrors({ name: "Username is taken, pick another" });
+        }
+      }
+    }
+  };
+  
+  // form validation checks
+  const findFormErrors = () => {
+    const { username, email, password } = form;
+    const newErrors = {};
+    // username validation checks
+    if (!username || username === "") newErrors.name = "Input a valid username";
+    else if (username.length < 6) newErrors.name = "Username must be at least 6 characters";
+    // email validation checks
+    if (!email || email === "") newErrors.email = "Input a valid email address";
+    if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Input a valid email address";
+    // password validation checks
+    if (!password || password === "") newErrors.password = "Input a valid password";
+    else if (password.length < 8) newErrors.password = "Password must be at least 8 characters";
+    return newErrors;
+  };
+
   useEffect(() => {
     document.body.style.backgroundColor = 'aliceblue';
 
@@ -30,231 +98,173 @@ const PrivateUserProfile = () => {
     };
   }, []);
 
+  const handleClick = (event) => {
+    const { name } = event.target;
+    setButtonName(name);
+    setOutput(""); // add this line
+    if (name === "Display") {
+      setShowDetails(true);
+    } else {
+      setShowDetails(false);
+      clearProfileDetails();
+    }
+  };
+  const [buttonName, setButtonName] = useState("Display");
 
-  
   return (
-    <div className="container" style={{ margin: 0, padding: 0 }}>
-      <div className="row" style={{ margin: 0, padding: 0 }}>
-        <div className="col-md-3">
-        <div className="list-group" style={{ marginTop: "30px", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
- 
- /*Profile Details button*/
-  <button
-  type="button"
-  className="list-group-item list-group-item-action active"
-  onClick={() => setShowDetails(true)}
+    <Container>
+     <h1>Profile Page </h1>
+{showDetails && (
+  <div id="profile-details">
+    <p>Username: {user.username}</p>
+    <p>Email: {user.email}</p>
+  </div>
+  )}
+<Button
+  variant="primary"
+  onClick={handleClick}
+  name={showDetails ? "Hide" : "Display"}
   style={{ 
     backgroundColor: "initial",
-  backgroundImage: "linear-gradient(to bottom right, #48c6ef, #6f86d6)",
-  borderRadius: "3px",
-  borderStyle: "none",
-  boxShadow: "rgba(245, 244, 247, .25) 0 1px 1px inset",
-  color: "#fff",
-  cursor: "pointer",
-  display: "inline-block",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "16px",
-  fontWeight: "500",
-  height: "100px",
-  lineHeight: "60px",
-  marginLeft: "-13px",
-  outline: "0",
-  textAlign: "center",
-  transition: "all .3s cubic-bezier(.05, .03, .35, 1)",
-  userSelect: "none",
-  WebkitUserSelect: "none",
-  touchAction: "manipulation",
-  verticalAlign: "bottom",
-  width: "250px"
-    }}
-  >
-    Profile Details
-  </button>
-
-/*Profile editUser button*/
-  <button
- type="button"
- className="list-group-item list-group-item-action active"
- onClick={handleShow}
- style={{ 
-  backgroundColor: "initial",
-  backgroundImage: "linear-gradient(to bottom right, #48c6ef, #6f86d6)",
-  borderRadius: "3px",
-  borderStyle: "none",
-  boxShadow: "rgba(245, 244, 247, .25) 0 1px 1px inset",
-  color: "#fff",
-  cursor: "pointer",
-  display: "inline-block",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "16px",
-  fontWeight: "500",
-  height: "100px",
-  lineHeight: "60px",
-  marginLeft: "-13px",
-  outline: "0",
-  textAlign: "center",
-  transition: "all .3s cubic-bezier(.05, .03, .35, 1)",
-  userSelect: "none",
-  WebkitUserSelect: "none",
-  touchAction: "manipulation",
-  verticalAlign: "bottom",
-  width: "250px"
-    }}
-  >
-    Edit Profile
-  </button>
-
-  /*Delete Profile button*/
-  <button
-   type="button"
-   className="list-group-item list-group-item-action active"
-   onClick={handleShow}
-   style={{ 
-    backgroundColor: "initial",
-    backgroundImage: "linear-gradient(to bottom right, #48c6ef, #6f86d6)",
+    backgroundImage: "linear-gradient(to bottom right, #828282, #7d7d7d, #616161)",
     borderRadius: "3px",
     borderStyle: "none",
     boxShadow: "rgba(245, 244, 247, .25) 0 1px 1px inset",
     color: "#fff",
     cursor: "pointer",
-    display: "inline-block",
+    display: "block",
     fontFamily: "Inter, sans-serif",
     fontSize: "16px",
     fontWeight: "500",
     height: "100px",
     lineHeight: "60px",
-    marginLeft: "-13px",
     outline: "0",
-    textAlign: "center",
+    textAlign: "left",
     transition: "all .3s cubic-bezier(.05, .03, .35, 1)",
     userSelect: "none",
     WebkitUserSelect: "none",
     touchAction: "manipulation",
     verticalAlign: "bottom",
-    width: "250px"
-    }}
-  >
-    Delete Profile
-  </button>
-
-/*Find My User button*/
-  <button
-  type="button"
-  className="list-group-item list-group-item-action active"
-  onClick={handleShow}
-  style={{ 
-    backgroundColor: "initial",
-    backgroundImage: "linear-gradient(to bottom right, #48c6ef, #6f86d6)",
-    borderRadius: "3px",
-    borderStyle: "none",
-    boxShadow: "rgba(245, 244, 247, .25) 0 1px 1px inset",
-    color: "#fff",
-    cursor: "pointer",
-    display: "inline-block",
-    fontFamily: "Inter, sans-serif",
-    fontSize: "16px",
-    fontWeight: "500",
-    height: "100px",
-    lineHeight: "60px",
-    marginLeft: "-13px",
-    outline: "0",
-    textAlign: "center",
-    transition: "all .3s cubic-bezier(.05, .03, .35, 1)",
-    userSelect: "none",
-    WebkitUserSelect: "none",
-    touchAction: "manipulation",
-    verticalAlign: "bottom",
-    width: "250px"
-    }}
-  >
-    Find My User
-  </button>
-
-</div>
-
-/*logout button*/
-<button
-  type="button"
-  className="list-group-item list-group-item-action active"
-  onClick={handleShow}
-  style={{ 
-    backgroundColor: "initial",
-  backgroundImage: "linear-gradient(to bottom right, #48c6ef, #6f86d6)",
-  borderRadius: "3px",
-  borderStyle: "none",
-  boxShadow: "rgba(245, 244, 247, .25) 0 1px 1px inset",
-  color: "#fff",
-  cursor: "pointer",
-  display: "inline-block",
-  fontFamily: "Inter, sans-serif",
-  fontSize: "16px",
-  fontWeight: "500",
-  height: "100px",
-  lineHeight: "60px",
-  marginLeft: "-13px",
-  outline: "0",
-  textAlign: "center",
-  transition: "all .3s cubic-bezier(.05, .03, .35, 1)",
-  userSelect: "none",
-  WebkitUserSelect: "none",
-  touchAction: "manipulation",
-  verticalAlign: "bottom",
-  width: "250px"
+    width: "230px",
+    margin: "30px 0",
+    marginLeft: "-280px"
   }}
 >
-  Log Out
-</button>
-<Modal
-  show={show}
-  onHide={handleClose}
-  backdrop="static"
-  keyboard={false}
->
-  <Modal.Header closeButton>
-    <Modal.Title>Log Out</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>Are you sure you want to Log Out?</Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={handleClose}>
-      Close
-    </Button>
-    <Button variant="primary" onClick={handleLogout}>
-      Yes
-    </Button>
-  </Modal.Footer>
-</Modal>
-        </div>
-        
-        <div className="col-md-9" 
-        style={{ 
-          position: "absolute", 
-          bottom: "245px", 
-          left: "250px", 
-          boxShadow: "1px 1px 10px rgba(0, 0, 0, 1)", 
-          padding: "50px",
-          width: "800px",
-          height: "600px",
-          backgroundColor: "rgba(0, 0, 0, 0.2)",}}>
-  {showDetails && (
-    <div>
-      <h3>
-        Welcome<span className="username"> @{user.username}</span>
-      </h3>
-      <h3>
-        Your userId in mongo db is<span className="userId"> {user.userId}</span>
-      </h3>
-      <h3>
-        Your registered email is<span className="email"> {user.email}</span>
-      </h3>
-    </div>
-    
-  )}
-</div>
+  {showDetails ? "Hide" : "Display"} User Info
+</Button>
 
-      </div>
-    </div>
+
+      <Button variant="warning" 
+      onClick={handleShow}
+      style={{ 
+        backgroundColor: "initial",
+        backgroundImage: "linear-gradient(to bottom right, #828282, #7d7d7d, #616161)",
+        borderRadius: "3px",
+        borderStyle: "none",
+        boxShadow: "rgba(245, 244, 247, .25) 0 1px 1px inset",
+        color: "#fff",
+        cursor: "pointer",
+        display: "block",
+        fontFamily: "Inter, sans-serif",
+        fontSize: "16px",
+        fontWeight: "500",
+        height: "100px",
+        lineHeight: "60px",
+        outline: "0",
+        textAlign: "left",
+        transition: "all .3s cubic-bezier(.05, .03, .35, 1)",
+        userSelect: "none",
+        WebkitUserSelect: "none",
+        touchAction: "manipulation",
+        verticalAlign: "bottom",
+        width: "230px",
+        margin: "30px 0",
+        marginLeft: "-280px"
+      }}
+        >
+        Edit Profile
+      </Button>
+      <Button variant="danger" 
+      onClick={handleLogout}
+      style={{ 
+        backgroundColor: "initial",
+        backgroundImage: "linear-gradient(to bottom right, #828282, #7d7d7d, #616161)",
+        borderRadius: "3px",
+        borderStyle: "none",
+        boxShadow: "rgba(245, 244, 247, .25) 0 1px 1px inset",
+        color: "#fff",
+        cursor: "pointer",
+        display: "block",
+        fontFamily: "Inter, sans-serif",
+        fontSize: "16px",
+        fontWeight: "500",
+        height: "100px",
+        lineHeight: "60px",
+        outline: "0",
+        textAlign: "left",
+        transition: "all .3s cubic-bezier(.05, .03, .35, 1)",
+        userSelect: "none",
+        WebkitUserSelect: "none",
+        touchAction: "manipulation",
+        verticalAlign: "bottom",
+        width: "230px",
+        margin: "30px 0",
+        marginLeft: "-280px"
+      }}>
+        Logout
+      </Button>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Profile</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                className="form-control"
+                id="username"
+                onChange={handleChange}
+                placeholder={user.username}
+              />
+              {errors.name && <small className="text-danger">{errors.name}</small>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="email">Email address</label>
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                onChange={handleChange}
+                placeholder={user.email}
+              />
+              {errors.email && <small className="text-danger">{errors.email}</small>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                onChange={handleChange}
+                placeholder="Password"
+              />
+              {errors.password && <small className="text-danger">{errors.password}</small>}
+            </div>
+            <button type="submit" className="btn btn-primary">
+              Save Changes
+            </button>
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
   );
-  
 };
 
 export default PrivateUserProfile;

@@ -20,7 +20,7 @@ export default function Navbar() {
   // we have an issue with getUserInfo() returning null after a few minutes
   // it seems.
   return (
-    <ReactNavbar style={{ backgroundColor: "#a9a9a9" }}>
+    <ReactNavbar style={{ backgroundColor: "#8c8c8c" }}>
     <Container>
       <Nav className="me-auto">
         <Nav.Link href="/" style={{ color: "white" }}>Start</Nav.Link>
