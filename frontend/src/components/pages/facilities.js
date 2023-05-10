@@ -4,10 +4,12 @@ import axios from 'axios';
 import { Form } from 'react-bootstrap';
 
 function Facilities() {
+   // State for storing facilities data, facility names, and the selected facility
   const [facilities, setFacilities] = useState([]);
   const [facilityNames, setFacilityNames] = useState([]);
   const [selectedFacility, setSelectedFacility] = useState(null);
 
+   // Fetch facilities data using the MBTA API when the component mounts
   useEffect(() => {
     async function fetchData() {
       const result = await axios('https://api-v3.mbta.com/facilities');
@@ -20,12 +22,14 @@ function Facilities() {
     fetchData();
   }, []);
   
+   // Handle the selection of a facility from the dropdown
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
     const selected = facilities.find(facility => facility.attributes.long_name === selectedName);
     setSelectedFacility(selected);
   };
 
+  // Render the Facilities component
   return (
     <div
       style={{
