@@ -4,10 +4,12 @@ import axios from 'axios';
 import { Form } from 'react-bootstrap';
 
 function RoutesPage() {
+  // State for storing routes data, route names, and the selected route
   const [routes, setRoutes] = useState([]);
   const [routeNames, setRouteNames] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState(null);
 
+  // Fetch routes data from the MBTA API when the component mounts
   useEffect(() => {
     async function fetchData() {
       const result = await axios('https://api-v3.mbta.com/routes');
@@ -20,12 +22,14 @@ function RoutesPage() {
     fetchData();
   }, []);
 
+  // Handle the selection of a route from the dropdown
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
     const selected = routes.find(route => route.attributes.long_name === selectedName);
     setSelectedRoute(selected);
   };
 
+  // Render the RoutesPage component
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem' }}>
       <h1 style={{ color: 'white' }}>Routes</h1>
@@ -41,6 +45,7 @@ function RoutesPage() {
         </Form.Group>
       </Form>
       {routes.map(route => (
+        // Only display the route card if no route is selected or if the current route matches the selected one
         (!selectedRoute || route === selectedRoute) && (
           <Card
             body
