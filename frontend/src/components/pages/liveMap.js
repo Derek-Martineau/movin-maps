@@ -1,87 +1,88 @@
-// Importing all necessary dependencies
+// Import necessary libraries
 import React, { useState, useEffect, useRef } from 'react';
-import { Map, View } from 'ol';
-import TileLayer from 'ol/layer/Tile';
-import { OSM } from 'ol/source';
-import 'ol/ol.css';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import Point from 'ol/geom/Point';
-import Feature from 'ol/Feature';
-import Style from 'ol/style/Style';
-import Icon from 'ol/style/Icon';
-import axios from 'axios';
-import { fromLonLat } from 'ol/proj';
+import { Map, View } from 'ol';  // openlayers Map and View
+import TileLayer from 'ol/layer/Tile';  // openlayers TileLayer
+import { OSM } from 'ol/source';  // openlayers OSM (Open Street Map) source
+import 'ol/ol.css';  // openlayers CSS
+import VectorLayer from 'ol/layer/Vector';  // openlayers VectorLayer
+import VectorSource from 'ol/source/Vector';  // openlayers VectorSource
+import Point from 'ol/geom/Point';  // openlayers Point
+import Feature from 'ol/Feature';  // openlayers Feature
+import Style from 'ol/style/Style';  // openlayers Style
+import Icon from 'ol/style/Icon';  // openlayers Icon
+import axios from 'axios';  // Axios for making HTTP requests
+import { fromLonLat } from 'ol/proj';  // openlayers fromLonLat for transforming coordinates
 
-// The main component of the application
+// Main component
 const TrainMap = () => {
-  // Create a reference object to hold the map object
-  const mapRef = useRef();
+  // References and states
+  const mapRef = useRef();  // React ref for the map div
+  const [map, setMap] = useState();  // State for the map instance
+  const [selectedTransit, setSelectedTransit] = useState('');  // State for the selected transit type
+  const [selectedRoute, setSelectedRoute] = useState('');  // State for the selected route
+  const [routes, setRoutes] = useState([]);  // State for the list of routes
 
-  // State variables to store map, selected transit type, selected route, and routes
-  const [map, setMap] = useState();
-  const [selectedTransit, setSelectedTransit] = useState('');
-  const [selectedRoute, setSelectedRoute] = useState('');
-  const [routes, setRoutes] = useState([]);
-
-  // Effect to fetch routes whenever the selected transit type changes
+  // Effect hook to fetch routes when the selected transit type changes
   useEffect(() => {
     async function fetchRoutes() {
       try {
+        // If a transit type is selected, fetch the corresponding routes
         if (selectedTransit !== '') {
           const response = await axios.get(
             `https://api-v3.mbta.com/routes?filter[type]=${selectedTransit}`
           );
-          setRoutes(response.data.data);
+          setRoutes(response.data.data);  // Update routes state with the fetched data
         } else {
-          setRoutes([]);
+          setRoutes([]);  // If no transit type is selected, clear the routes
         }
       } catch (error) {
-        console.error('Error fetching routes:', error);
+        console.error('Error fetching routes:', error);  // Log any error occurred
       }
     }
 
-    fetchRoutes();
-  }, [selectedTransit]);
+    fetchRoutes();  // Execute the fetchRoutes function
+  }, [selectedTransit]);  // Dependency array, the effect runs again when the value of selectedTransit changes
 
-  // Effect to create the map when the component mounts
+  // Effect hook to initialize the map when the component mounts
   useEffect(() => {
-    if (!mapRef.current) return;
+    if (!mapRef.current) return;  // If the map div ref is not available, do nothing
 
+    // Create a new openlayers Map instance
     const initialMap = new Map({
-      target: mapRef.current,
+      target: mapRef.current,  // The target div for the map
       layers: [
         new TileLayer({
-          source: new OSM(),
+          source: new OSM(),  // Use Open Street Map as the source
         }),
       ],
       view: new View({
-        center: [-7910361.335273651, 5215196.272155075],
-        zoom: 15,
-        maxZoom: 40,
-        minZoom: 10,
+        center: [-7910361.335273651, 5215196.272155075],  // The initial center of the map
+        zoom: 15,  // The initial zoom level
+        maxZoom: 40,  // The maximum zoom level
+        minZoom: 10,  // The minimum zoom level
       }),
     });
 
-    setMap(initialMap);
+    setMap(initialMap);  // Update the map state with the new Map instance
 
-    // Clean up function to avoid memory leaks
     return () => {
+      // Cleanup function to unset the map target
       initialMap.setTarget(null);
     };
-  }, []);
+  }, []);  // Dependency array is empty, so this effect runs only once when the component mounts
 
-  // Effect to create layers and fetch stops whenever the map, selected transit or selected route changes
+  // Effect hook to update the map when the map, selected transit type or selected route changes
   useEffect(() => {
-    if (!map) return;
+    if (!map) return;  // If the map instance is not available, do nothing
 
-    // Create sources for each layer
+    // Create sources and layers for trains, subways, and buses
     const trainSource = new VectorSource();
     const subwaySource = new VectorSource();
     const trainLocationsSource = new VectorSource();
     const subwayLocationsSource = new VectorSource();
+    const busSource = new VectorSource();
+    const busLocationsSource = new VectorSource();
 
-    // Create layers for each type of feature
     const trainStopLayer = createVectorLayer(trainSource, '/trainFacility.png', 0.02);
     const subwayStopLayer = createVectorLayer(subwaySource, '/subwayStops.png', 0.09);
     const trainLocationsLayer = createVectorLayer(
@@ -96,6 +97,13 @@ const TrainMap = () => {
       0.015,
       [0.5, 1]
     );
+    const busStopLayer = createVectorLayer(busSource, '/busStop.png', 0.02);
+    const busLocationsLayer = createVectorLayer(
+      busLocationsSource,
+      '/bus.png',
+      0.12,
+      [0.5, 1]
+    );
 
     // Update layers based on the selected transit type
     updateLayers(
@@ -104,28 +112,52 @@ const TrainMap = () => {
       subwayStopLayer,
       subwayLocationsLayer,
       trainStopLayer,
-      trainLocationsLayer
+      trainLocationsLayer,
+      busStopLayer,
+      busLocationsLayer
     );
 
     // Fetch stops based on the selected transit type and route
-    fetchStops(selectedTransit, selectedRoute, subwaySource, trainSource);
+    fetchStops(selectedTransit, selectedRoute, subwaySource, trainSource, busSource);
 
-    // Update locations of the selected transit and route
-    updateLocations(selectedTransit, selectedRoute, subwayLocationsSource, trainLocationsSource);
+    // Update locations based on the selected transit type and route
+    updateLocations(
+      selectedTransit,
+      selectedRoute,
+      subwayLocationsSource,
+      trainLocationsSource,
+      busLocationsSource
+    );
 
-    // Set interval to update locations every 5 seconds
+    // Set an interval to update the locations every 5 seconds
     const intervalId = setInterval(() => {
-      updateLocations(selectedTransit, selectedRoute, subwayLocationsSource, trainLocationsSource);
+      updateLocations(
+        selectedTransit,
+        selectedRoute,
+        subwayLocationsSource,
+        trainLocationsSource,
+        busLocationsSource
+      );
     }, 5000);
 
-    // Clean up function to clear interval and remove layers to avoid memory leaks
+    // Cleanup function to clear the interval and remove the layers when the component unmounts or when the map, selected transit type or selected route changes
     return () => {
       clearInterval(intervalId);
-      removeLayers(map, [subwayStopLayer, subwayLocationsLayer, trainStopLayer, trainLocationsLayer]);
+      removeLayers(
+        map,
+        [
+          subwayStopLayer,
+          subwayLocationsLayer,
+          trainStopLayer,
+          trainLocationsLayer,
+          busStopLayer,
+          busLocationsLayer
+        ]
+      );
     };
-  }, [map, selectedTransit, selectedRoute]);
+  }, [map, selectedTransit, selectedRoute]);  // Dependency array, the effect runs again when the value of map, selectedTransit or selectedRoute changes
 
-  // The return function of the TrainMap component
+  // Render the component
   return (
     <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
       <div
@@ -143,6 +175,7 @@ const TrainMap = () => {
           <option value="">Select Transit</option>
           <option value="0">Subway</option>
           <option value="2">Commuter Rail</option>
+          <option value="3">Bus</option>
         </select>
         {selectedTransit !== '' && (
           <select
@@ -163,7 +196,7 @@ const TrainMap = () => {
   );
 };
 
-// Function to create vector layer with specific style
+// Function to create a vector layer
 function createVectorLayer(source, iconSrc, scale, anchor) {
   return new VectorLayer({
     source: source,
@@ -177,111 +210,147 @@ function createVectorLayer(source, iconSrc, scale, anchor) {
   });
 }
 
-// Function to update layers based on the selected transit type
+// Function to update the layers on the map based on the selected transit type
 function updateLayers(
   selectedTransit,
   map,
   subwayStopLayer,
   subwayLocationsLayer,
   trainStopLayer,
-  trainLocationsLayer
+  trainLocationsLayer,
+  busStopLayer,
+  busLocationsLayer
 ) {
   if (selectedTransit === '') {
-    removeLayers(map, [subwayStopLayer, subwayLocationsLayer, trainStopLayer, trainLocationsLayer]);
+    removeLayers(
+      map,
+      [
+        subwayStopLayer,
+        subwayLocationsLayer,
+        trainStopLayer,
+        trainLocationsLayer,
+        busStopLayer,
+        busLocationsLayer
+      ]
+    );
   } else if (selectedTransit === '0') {
     addLayers(map, [subwayStopLayer, subwayLocationsLayer]);
-    removeLayers(map, [trainStopLayer, trainLocationsLayer]);
+    removeLayers(
+      map,
+      [
+        trainStopLayer,
+        trainLocationsLayer,
+        busStopLayer,
+        busLocationsLayer
+      ]
+    );
   } else if (selectedTransit === '2') {
     addLayers(map, [trainStopLayer, trainLocationsLayer]);
-    removeLayers(map, [subwayStopLayer, subwayLocationsLayer]);
+    removeLayers(
+      map,
+      [
+        subwayStopLayer,
+        subwayLocationsLayer,
+        busStopLayer,
+        busLocationsLayer
+      ]
+    );
+  } else if (selectedTransit === '3') {
+    addLayers(map, [busStopLayer, busLocationsLayer]);
+    removeLayers(
+      map,
+      [
+        subwayStopLayer,
+        subwayLocationsLayer,
+        trainStopLayer,
+        trainLocationsLayer
+      ]
+    );
   }
-}
-
-// Function to add layers to the map
-function addLayers(map, layersToAdd) {
-  layersToAdd.forEach((layer) => {
-    if (!map.getLayers().getArray().includes(layer)) {
-      map.addLayer(layer);
-    }
-  });
 }
 
 // Function to remove layers from the map
-function removeLayers(map, layersToRemove) {
-  layersToRemove.forEach((layer) => {
-    if (map.getLayers().getArray().includes(layer)) {
-      map.removeLayer(layer);
-    }
+function removeLayers(map, layers) {
+  layers.forEach((layer) => {
+    map.removeLayer(layer);
   });
 }
 
-// Function to fetch stops based on the selected transit type and route
-async function fetchStops(selectedTransit, selectedRoute, subwaySource, trainSource) {
-  if (selectedTransit === '0') {
-    subwaySource.clear();
-    await fetchStopsByType('0', subwaySource, selectedRoute);
-  }
-
-  if (selectedTransit === '2') {
-    trainSource.clear();
-    await fetchStopsByType('2', trainSource, selectedRoute);
-  }
+// Function to add layers to the map
+function addLayers(map, layers) {
+  layers.forEach((layer) => {
+    map.addLayer(layer);
+  });
 }
 
-// Function to fetch stops by type
-async function fetchStopsByType(routeType, source, routeId) {
-  let url = `https://api-v3.mbta.com/stops?filter[route_type]=${routeType}`;
-  if (routeId !== '') {
-    url += `&filter[route]=${routeId}`;
-  }
+// Function to fetch stops for the selected transit type and route
+async function fetchStops(selectedTransit, selectedRoute, subwaySource, trainSource, busSource) {
   try {
-    const response = await axios.get(url);
-    response.data.data.forEach((stop) => {
-      const coordinates = [stop.attributes.longitude, stop.attributes.latitude];
-      const point = new Point(fromLonLat(coordinates));
-      const feature = new Feature({ geometry: point });
-      source.addFeature(feature);
+    const response = await axios.get(
+      `https://api-v3.mbta.com/stops?filter[route]=${selectedRoute}`
+    );
+    const stops = response.data.data;
+    const features = stops.map((stop) => {
+      const coordinates = fromLonLat([
+        parseFloat(stop.attributes.longitude),
+        parseFloat(stop.attributes.latitude),
+      ]);
+      return new Feature({
+        geometry: new Point(coordinates),
+      });
     });
+    // Add the features to the appropriate source based on the selected transit type
+    if (selectedTransit === '0') {
+      subwaySource.clear();
+      subwaySource.addFeatures(features);
+    } else if (selectedTransit === '2') {
+      trainSource.clear();
+      trainSource.addFeatures(features);
+    } else if (selectedTransit === '3') {
+      busSource.clear();
+      busSource.addFeatures(features);
+    }
   } catch (error) {
-    console.error('Error fetching MBTA API:', error);
+    console.error('Error fetching stops:', error);
   }
 }
 
-// Function to update locations of the selected transit and route
+// Function to update the locations of the vehicles on the map
 async function updateLocations(
   selectedTransit,
   selectedRoute,
   subwayLocationsSource,
-  trainLocationsSource
+  trainLocationsSource,
+  busLocationsSource
 ) {
-  if (selectedTransit ==='0') {
-    subwayLocationsSource.clear();
-    await fetchLocationsByType('0', subwayLocationsSource, selectedRoute);
-  }
-
-  if (selectedTransit === '2') {
-    trainLocationsSource.clear();
-    await fetchLocationsByType('2', trainLocationsSource, selectedRoute);
-  }
-}
-
-// Function to fetch locations by type
-async function fetchLocationsByType(routeType, source, routeId) {
-  let url = `https://api-v3.mbta.com/vehicles?filter[route_type]=${routeType}`;
-  if (routeId !== '') {
-    url += `&filter[route]=${routeId}`;
-  }
   try {
-    const response = await axios.get(url);
-    response.data.data.forEach((vehicle) => {
-      const coordinates = [vehicle.attributes.longitude, vehicle.attributes.latitude];
-      const point = new Point(fromLonLat(coordinates));
-      const feature = new Feature({ geometry: point });
-      source.addFeature(feature);
+    const response = await axios.get(
+      `https://api-v3.mbta.com/vehicles?filter[route]=${selectedRoute}`
+    );
+    const vehicles = response.data.data;
+    const features = vehicles.map((vehicle) => {
+      const coordinates = fromLonLat([
+        parseFloat(vehicle.attributes.longitude),
+        parseFloat(vehicle.attributes.latitude),
+      ]);
+      return new Feature({
+        geometry: new Point(coordinates),
+      });
     });
+    // Update the appropriate source based on the selected transit type
+    if (selectedTransit === '0') {
+      subwayLocationsSource.clear();
+      subwayLocationsSource.addFeatures(features);
+    } else if (selectedTransit === '2') {
+      trainLocationsSource.clear();
+      trainLocationsSource.addFeatures(features);
+    } else if (selectedTransit === '3') {
+      busLocationsSource.clear();
+      busLocationsSource.addFeatures(features);
+    }
   } catch (error) {
-    console.error('Error fetching MBTA API:', error);
+    console.error('Error updating vehicle locations:', error);
   }
 }
 
-export default TrainMap; 
+export default TrainMap;
