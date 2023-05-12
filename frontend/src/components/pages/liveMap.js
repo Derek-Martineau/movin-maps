@@ -1,21 +1,20 @@
-// Import necessary libraries
 import React, { useState, useEffect, useRef } from 'react';
-import { Map, View } from 'ol';  // openlayers Map and View
-import TileLayer from 'ol/layer/Tile';  // openlayers TileLayer
-import { OSM } from 'ol/source';  // openlayers OSM (Open Street Map) source
-import 'ol/ol.css';  // openlayers CSS
-import VectorLayer from 'ol/layer/Vector';  // openlayers VectorLayer
-import VectorSource from 'ol/source/Vector';  // openlayers VectorSource
-import Point from 'ol/geom/Point';  // openlayers Point
-import Feature from 'ol/Feature';  // openlayers Feature
-import Style from 'ol/style/Style';  // openlayers Style
-import Icon from 'ol/style/Icon';  // openlayers Icon
-import axios from 'axios';  // Axios for making HTTP requests
-import { fromLonLat } from 'ol/proj';  // openlayers fromLonLat for transforming coordinates
+import { Map, View } from 'ol'; 
+import TileLayer from 'ol/layer/Tile';  
+import { OSM } from 'ol/source';  
+import 'ol/ol.css';  
+import VectorLayer from 'ol/layer/Vector'; 
+import VectorSource from 'ol/source/Vector';  
+import Point from 'ol/geom/Point';  
+import Feature from 'ol/Feature';  
+import Style from 'ol/style/Style';
+import Icon from 'ol/style/Icon';  
+import axios from 'axios';  
+import { fromLonLat } from 'ol/proj';  
 
 // Main component
 const TrainMap = () => {
-  // References and states
+  
   const mapRef = useRef();  // React ref for the map div
   const [map, setMap] = useState();  // State for the map instance
   const [selectedTransit, setSelectedTransit] = useState('');  // State for the selected transit type
@@ -26,54 +25,54 @@ const TrainMap = () => {
   useEffect(() => {
     async function fetchRoutes() {
       try {
-        // If a transit type is selected, fetch the corresponding routes
+        
         if (selectedTransit !== '') {
           const response = await axios.get(
             `https://api-v3.mbta.com/routes?filter[type]=${selectedTransit}`
           );
-          setRoutes(response.data.data);  // Update routes state with the fetched data
+          setRoutes(response.data.data); 
         } else {
-          setRoutes([]);  // If no transit type is selected, clear the routes
+          setRoutes([]);  
         }
       } catch (error) {
-        console.error('Error fetching routes:', error);  // Log any error occurred
+        console.error('Error fetching routes:', error);
       }
     }
 
-    fetchRoutes();  // Execute the fetchRoutes function
-  }, [selectedTransit]);  // Dependency array, the effect runs again when the value of selectedTransit changes
+    fetchRoutes();  
+  }, [selectedTransit]);
 
   // Effect hook to initialize the map when the component mounts
   useEffect(() => {
-    if (!mapRef.current) return;  // If the map div ref is not available, do nothing
+    if (!mapRef.current) return;
 
-    // Create a new openlayers Map instance
+  
     const initialMap = new Map({
-      target: mapRef.current,  // The target div for the map
+      target: mapRef.current, 
       layers: [
         new TileLayer({
-          source: new OSM(),  // Use Open Street Map as the source
+          source: new OSM(),
         }),
       ],
       view: new View({
-        center: [-7910361.335273651, 5215196.272155075],  // The initial center of the map
-        zoom: 15,  // The initial zoom level
-        maxZoom: 40,  // The maximum zoom level
-        minZoom: 10,  // The minimum zoom level
+        center: [-7910361.335273651, 5215196.272155075], 
+        zoom: 15,
+        maxZoom: 40,  
+        minZoom: 10,  
       }),
     });
 
-    setMap(initialMap);  // Update the map state with the new Map instance
+    setMap(initialMap);
 
     return () => {
-      // Cleanup function to unset the map target
+    
       initialMap.setTarget(null);
     };
-  }, []);  // Dependency array is empty, so this effect runs only once when the component mounts
+  }, []);
 
   // Effect hook to update the map when the map, selected transit type or selected route changes
   useEffect(() => {
-    if (!map) return;  // If the map instance is not available, do nothing
+    if (!map) return;
 
     // Create sources and layers for trains, subways, and buses
     const trainSource = new VectorSource();
@@ -155,7 +154,7 @@ const TrainMap = () => {
         ]
       );
     };
-  }, [map, selectedTransit, selectedRoute]);  // Dependency array, the effect runs again when the value of map, selectedTransit or selectedRoute changes
+  }, [map, selectedTransit, selectedRoute]); 
 
   // Render the component
   return (
@@ -173,7 +172,8 @@ const TrainMap = () => {
           onChange={(e) => setSelectedTransit(e.target.value)}
         >
           <option value="">Select Transit</option>
-          <option value="0">Subway</option>
+          <option value="0">Subway Light Rail</option>
+          <option value="1">Subway Heavy Rail</option>
           <option value="2">Commuter Rail</option>
           <option value="3">Bus</option>
         </select>
@@ -244,6 +244,17 @@ function updateLayers(
         busLocationsLayer
       ]
     );
+    } else if (selectedTransit === '1') {
+      addLayers(map, [subwayStopLayer, subwayLocationsLayer]);
+      removeLayers(
+        map,
+        [
+          trainStopLayer,
+          trainLocationsLayer,
+          busStopLayer,
+          busLocationsLayer
+        ]
+      );
   } else if (selectedTransit === '2') {
     addLayers(map, [trainStopLayer, trainLocationsLayer]);
     removeLayers(
@@ -303,6 +314,9 @@ async function fetchStops(selectedTransit, selectedRoute, subwaySource, trainSou
     if (selectedTransit === '0') {
       subwaySource.clear();
       subwaySource.addFeatures(features);
+    } else if (selectedTransit === '1') {
+      subwaySource.clear();
+      subwaySource.addFeatures(features);
     } else if (selectedTransit === '2') {
       trainSource.clear();
       trainSource.addFeatures(features);
@@ -339,6 +353,9 @@ async function updateLocations(
     });
     // Update the appropriate source based on the selected transit type
     if (selectedTransit === '0') {
+      subwayLocationsSource.clear();
+      subwayLocationsSource.addFeatures(features);
+    } else if (selectedTransit === '1') {
       subwayLocationsSource.clear();
       subwayLocationsSource.addFeatures(features);
     } else if (selectedTransit === '2') {
