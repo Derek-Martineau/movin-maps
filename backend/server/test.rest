@@ -56,13 +56,15 @@ POST  http://localhost:8081/user/deleteAll
 ### get all developers
 GET http://localhost:8081/developer/getAll
 
+
+
 ### edit developer
-POST http://localhost:8081/developer/editDeveloper
-Content-Type: application/json 
+POST http://localhost:8081/user/editDeveloper
+Content-Type: application/json
 
 {
-    "developerId" : "642c351d33f7fa1ca979051b",
-    "fName" : "Derek",
-    "lName" : "Martineau",
-    "projDescrition" : "This is a project description",
+    "developerId": "643ea592f37d8f545ea258b1",
+    "fName": "Archie",
+    "lName": "Berduo",
+    "projDescription": "Front-End Developer I have gained alot of experience in Front-End Development through OpenLayers Map layering, Webpage UX design  and some Back-End experience through the use of editi text from test to the database. My main opportunity that I wish to develop in the future is to fully understand the Front-end capability to change Back-End files from user input and more UI styling."
 }

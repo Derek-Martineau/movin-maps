@@ -1,8 +1,9 @@
 import React, {} from 'react'
 import Card from 'react-bootstrap/Card';
 
-document.body.style = 'background: purple;';
+document.body.style = 'background: gray;';
 const Landingpage = () => {
+
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem'}}>
         <Card style={{ width: '30rem' }} className="mx-2 my-2">

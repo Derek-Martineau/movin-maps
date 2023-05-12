@@ -22,6 +22,14 @@ function RoutesPage() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    document.body.style.backgroundColor = 'darkgray';
+
+    return () => {
+      document.body.style.backgroundColor = null;
+    };
+  }, []);
+
   // Handle the selection of a route from the dropdown
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
@@ -32,7 +40,7 @@ function RoutesPage() {
   // Render the RoutesPage component
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem' }}>
-      <h1 style={{ color: 'white' }}>Routes</h1>
+      <h1 style={{ color: 'Gray' }}>Routes</h1>
       <Form>
         <Form.Group controlId="routeSelect">
           <Form.Label style={{ color: 'white' }}>Select Route</Form.Label>

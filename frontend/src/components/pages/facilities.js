@@ -29,6 +29,14 @@ function Facilities() {
     setSelectedFacility(selected);
   };
 
+  useEffect(() => {
+    document.body.style.backgroundColor = 'darkgray';
+
+    return () => {
+      document.body.style.backgroundColor = null;
+    };
+  }, []);
+  
   // Render the Facilities component
   return (
     <div

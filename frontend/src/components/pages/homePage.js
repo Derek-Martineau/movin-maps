@@ -117,7 +117,7 @@ const HomePage = () => {
   </div>
   <div style={{ flex: '1', marginLeft: '2rem' }}>
     {developers.map((developer, index) => (
-      <div key={index} style={{ marginBottom: '18rem', padding: '5rem 5rem', marginRight: '6rem', color: 'white'}}>
+      <div key={index} style={{ marginBottom: '18rem', padding: '9rem 5rem', marginRight: '6rem', color: 'white'}}>
         <p>
           {developer.projDescription}
         </p>
