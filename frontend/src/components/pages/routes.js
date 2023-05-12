@@ -23,7 +23,7 @@ function RoutesPage() {
   }, []);
 
   useEffect(() => {
-    document.body.style.backgroundColor = 'darkgray';
+    document.body.style.backgroundColor = 'black';
 
     return () => {
       document.body.style.backgroundColor = null;
@@ -40,7 +40,7 @@ function RoutesPage() {
   // Render the RoutesPage component
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem' }}>
-      <h1 style={{ color: 'Gray' }}>Routes</h1>
+      <h1 style={{ color: 'white' }}>Routes</h1>
       <Form>
         <Form.Group controlId="routeSelect">
           <Form.Label style={{ color: 'white' }}>Select Route</Form.Label>

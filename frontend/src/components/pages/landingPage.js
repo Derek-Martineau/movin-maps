@@ -1,7 +1,7 @@
 import React, {} from 'react'
 import Card from 'react-bootstrap/Card';
 
-document.body.style = 'background: gray;';
+document.body.style = 'background: black;';
 const Landingpage = () => {
 
     return (
