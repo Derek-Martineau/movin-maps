@@ -63,15 +63,7 @@ const HomePage = () => {
 >
   <h1 style={{ marginBottom: '2rem' }}>Welcome To Movin' Maps!</h1>
   <p style={{ marginBottom: '5rem' }}>
-    The MBTA offers various transportation methods to the Massachusetts
-    area through services such as the subway system, commuter rail, bus,
-    and ferry routes. These transportation methods can be difficult to
-    navigate. Movin’ Maps offers users real-time locations of transport
-    through a GUI to make it easier to follow and plan routes. Users will
-    be able to store their favorite routes on their account, filter the
-    GUI to show specific routes or methods of transportation, and be
-    recommended routes relative to their location. The status will display
-    arrivals and alerts will update with delays.
+  The MBTA offers various transportation methods to the Massachusetts area through services such as the subway system, commuter rail, bus, and ferry routes. These transportation methods can be difficult to navigate. The MBTA Live Map offers users real-time locations of transport through a GUI to make it easier to follow and plan routes. Users will be able to store their favorite routes on their account, filter the GUI to show specific routes or methods of transportation, and be recommended routes relative to their location. The status will display arrivals and alerts will update with delays.
   </p>
 </div>
 
@@ -90,7 +82,7 @@ const HomePage = () => {
 >
   <h2 style={{ marginBottom: '1rem' }}>Meet The Developers</h2>
   <p style={{ marginBottom: '2rem', padding: '0 24rem' }}>
-    Movin' Maps was created for CSC300 the Software Engineering course taught by Professor Allan Brockenbrogh at Salem State University. Movin’ Maps is a project created by a small team of 3 developers studying Computer Science. Together we entered Software Engineering knowing very little about the subject, we were able to learn about the complete life cycle of the software development process and how to version control such as Git to work as a team. Along with learning new Programming languages JavaScript and CSS we were also able to learn React. We hope you enjoy our project!
+    Movin' Maps was created for CSC300 the Software Engineering course taught by Professor Allan Brockenbrogh at Salem State University. Movin’ Maps is a project created by a small team of 3 developers studying Computer Science. Together we entered Software Engineering knowing very little about the subject, we were able to learn about the complete life cycle of the software development process and how to use version control tools such as Git/Github. Along with learning new Programming languages, JavaScript and CSS we were able to use React components to sucessfully dislpay a live map. We hope you enjoy our project!
   </p>
 </div>
 
