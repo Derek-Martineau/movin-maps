@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import { useNavigate } from "react-router-dom";
 import getUserInfo from "../../utilities/decodeJwt";
 import { Container } from 'react-bootstrap';
-import axios from 'axios';
+
 
 
 const url = "http://localhost:8081/user/changeUserInfo";
-
+// the use effects and use states from displaying info and user logout 
 const PrivateUserProfile = () => {
   const [show, setShow] = useState(false);
   const [user, setUser] = useState({});
@@ -26,7 +25,7 @@ const PrivateUserProfile = () => {
   };
 
   useEffect(() => {
-    setUser(getUserInfo());
+    setUser(getUserInfo()); 
   }, []);
 
   function clearProfileDetails() {
@@ -34,6 +33,7 @@ const PrivateUserProfile = () => {
     profileDetails.innerHTML = "";
   }
 
+    // Set the background color of the body and reset it on component unmount
   useEffect(() => {
     document.body.style.backgroundColor = 'aliceblue';
 
@@ -42,28 +42,32 @@ const PrivateUserProfile = () => {
     };
   }, []);
 
+   // Function to handle Display/Hide button click
   const handleClick = (event) => {
     const { name } = event.target;
     setButtonName(name);
-    setOutput(""); // add this line
+    setOutput(""); // Reset the output state 
     if (name === "Display") {
-      setShowDetails(true);
+      setShowDetails(true);// Show profile details
     } else {
-      setShowDetails(false);
-      clearProfileDetails();
+      setShowDetails(false);// Hide profile details
+      clearProfileDetails();// Clear profile details from the DOM
     }
   };
-  const [buttonName, setButtonName] = useState("Display");
+  const [buttonName, setButtonName] = useState("Display");// State for button name
+
 
   return (
     <Container>
     <h1>Profile Page</h1>
+     {/* Conditionally render profile details if showDetails is true */}
 {showDetails && (
   <div id="profile-details" style={{ marginLeft: '100px' }}>
     <p>Username: {user.username}</p>
     <p>Email: {user.email}</p>
   </div>
 )}
+{/* Display/Hide button */}
 <Button
   variant="primary"
   onClick={handleClick}
@@ -93,10 +97,10 @@ const PrivateUserProfile = () => {
     margin: "30px 0",
     marginLeft: "-21.8%"
   }}
->
+>{/* Button text */}
   {showDetails ? "Hide" : "Display"} User Info
 </Button>
-
+{/* Logout button */}
       <Button variant="danger" 
       onClick={handleLogout}
       style={{ 
@@ -131,5 +135,4 @@ const PrivateUserProfile = () => {
 };
 
 export default PrivateUserProfile;
-
 
